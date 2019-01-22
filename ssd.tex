@@ -1,0 +1,83 @@
+\documentclass[10pt,letterpaper]{article}
+
+%%%%%%%%%%%%%%%%%%%% Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[hmargin=3.8cm,vmargin=3cm]{geometry}
+\usepackage[usenames]{xcolor}
+\definecolor{Blue}{RGB}{0, 60, 60}
+\definecolor{Red}{RGB}{0,35,60}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=Red,
+    filecolor=Blue,
+    linkcolor=Blue,
+    urlcolor=Blue
+}
+\usepackage{enumerate}
+\usepackage{sectsty}
+\usepackage{mathtools}
+\usepackage{aliascnt}
+
+\sectionfont{\large}
+\subsectionfont{\normalsize}
+
+\include{definitions/theoremlike}
+\include{definitions/math}
+\include{definitions/fields}
+\include{definitions/linearalgebra}
+\include{definitions/probability}
+\include{definitions/entropy}
+\include{definitions/citations}
+\addbibresource{references/main.bib}
+
+% Local definitions
+\DeclareMathOperator{\Ham}{Ham}
+\DeclareMathOperator{\down}{down}
+\DeclareMathOperator{\up}{up}
+\DeclareMathOperator{\wt}{wt}
+\DeclareMathOperator{\EE}{EE}
+\DeclareMathOperator{\Match}{Match}
+\DeclareMathOperator{\DISJ}{Disj}
+
+\newcommand{\propref}[1] {%
+\hyperref[#1]{Property~(P\ref*{#1})}}
+
+\begin{document}
+\title{\Large\bf On the communication complexity of 
+sparse set disjointness and exists-equal problems}
+\author{
+\normalsize Mert Sağlam\\%
+\small University of Washington\\%
+\small saglam@uw.edu \and
+\normalsize Gábor Tardos\\
+\small Simon Fraser University and\\
+\small Alfréd Rényi Institute of Mathematics\\
+\small tardos@renyi.hu}
+\date{}
+
+\maketitle
+\thispagestyle{empty}
+\vspace{-7.5mm}
+
+\input{abstract.tex}
+\newpage
+\tableofcontents
+\input{intro}
+\input{preliminaries}
+\input{upperbound}
+\input{elementary}
+\input{isoperimetry}
+\input{lowerbound}
+\input{discussion}
+
+\section*{Acknowledgments}
+We would like to thank Hossein Jowhari for many stimulating
+discussions during the early stages of this work.
+
+\printbibliography
+
+\end{document}

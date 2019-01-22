@@ -1,0 +1,66 @@
+% !TeX root = ssd.tex
+\section{Discussion}
+\label{sec:discussion}
+The $r$-round protocol we gave in \autoref{sec:upperbound}
+solves the sparse set disjointness problem in $O(k\log^{(r)}k)$
+total communication. As we proved in \autoref{sec:lowerbound}
+this is optimal. The same, however, cannot be said of the error
+probability. With the same protocol, but with more careful
+setting of the parameters the exponentially small error
+$O(2^{-\sqrt k})$ of the $\log^*k$-round protocol can be further
+decreased to $2^{-k^{1-o(1)}}$.
+
+For small (say, constant) values of $r$ this protocol cannot
+achieve exponentially small error error without the increase in
+the complexity if the universe size $m$ is unbounded. But if $m$
+is polynomial in $k$ (or even slightly larger,
+$m=\exp^{(r)}(O(\log^{(r)}k))$), we can replace the last round
+of the protocol by one player deterministically sending his or
+her entire ``current set'' $S_r$. With careful setting of the
+parameters in other rounds, this modified protocol has the same
+$O(k\log^{(r)}k)$ complexity but the error is now exponentially
+small: $O(2^{-k/\log k})$. Note that in our lower bound on the
+$r$-round complexity of the sparse set disjointness we we use
+the exists-equal problem with parameters $n=k$ and $t=4k$. This
+corresponds to the universe size $m=tn=4k^2$. In this case any
+protocol solving the exists-equal problem with $1/3$ error can
+be strengthened to exponentially small error using the same
+number of rounds and only a constant factor more communication.
+
+Our lower and upper bounds match for the exists-equal problem
+with parameters $n$ and $t=\Omega(n)$, since the upper bounds
+were established without any regard of the universe size, while
+the lower bounds worked for $t=4n$. Extensions of the techniques
+presented in this paper give matching bounds also in the case
+$3\le t<n$, where the $r$-round complexity is
+$\Theta(n\log^{(r)}t)$ for $r\le\log^*t$. Note, however, that in
+this case one needs to consider significantly more complicated
+input distributions and a more refined isoperimetric inequality,
+that does not permit arbitrary mismatches. The $\Omega(n)$ lower
+bound applies for the exists-equal problem of parameters $n$ and
+$t\ge3$ regardless of the number of rounds, as the disjointness
+problem on a universe of size $n$ is a sub-problem. For $t=2$
+the situation is drastically different, the exists-equal problem
+with $t=2$ is equivalent to a single equality problem.
+
+Finally a remark on using the joint random source model of
+randomized protocols throughout the paper. By a result of Newman
+\cite{Newman1991} our protocols of \autoref{sec:upperbound} can be
+made to work in private coin model (or even if one of the
+players is forced to behave deterministically) by increasing the
+first message length by $O(\log\log(N)+\log(1/\epsilon))$ bits,
+where $N= {m \choose k}$ is the number of possible inputs. In
+our case this means adding the term $O(\log\log m)+o(k)$ to our
+bound of $\smash{O(k\log^{(r)}k)}$, since our protocols make at least
+$\exp(-k/\log k)$ error. This additional cost is insignificant
+for reasonably small values of $m$, but it is necessary for
+large values as the equality problem, which is an instance of
+disjointness, requires $\Omega(\log \log m)$-bits in the private
+coin model.
+
+Note also that we achieve a super-linear increase in the
+communication for OR of $n$ instances of equality even in the
+private coin model for $r=1$. For $r\geq 2$, no such increase
+happens in the private coin model as communication complexity of
+$\EE^t_n$ is at most $O(n\log\log t)$ however a single equality
+problem requires $\Omega(\log \log t)$ bits.

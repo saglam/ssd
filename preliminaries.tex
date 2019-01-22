@@ -1,0 +1,83 @@
+% !TeX root = ssd.tex
+\section{Preliminaries}
+\label{sec:preliminaries}
+For a positive integer
+$t$, we write $[t]$ for the set of positive integers not
+exceeding $t$.
+
+For two $n$-dimensional vectors $x$, $y$, let
+$\Match(x,y)$ be the number of coordinates where $x$ and $y$
+agree. Notice that $n-\Match(x,y)$ is the Hamming distance
+between $x$ and $y$. For a vector $x\in[t]^n$ we write $x_i$ for
+its $i$\/th coordinate. 
+
+For $x,y\in [t]^n$ we denote the value of the exists-equal game
+by $\EE_n^t(x,y)$. Recall that it is zero if and only if $x$ and
+$y$ differ in each coordinate. Whenever we drop $t$ from the
+notation we assume $t=4n$. Often we will also drop $n$ and
+simply denote the game value by $\EE(x,y)$ if $n$ is clear from
+the context.
+% For two $k$-sets 
+%$S,T\subseteq[m]$, the sparse set disjointness game value is denoted 
+%by $\DISJ^m_k(S,T)$ and equals 1 (somewhat unconventionally) 
+%if and only if $S$ and $T$ intersect.
+
+All logarithms in this paper are to the base 2. Analogously,
+throughout this paper we take $\exp(x)=2^x$. We will also use
+the iterated versions of these functions:
+\begin{align*}
+\log^{(0)}x&\defeq x, & \exp^{(0)}x&\defeq x,\\
+\log^{(r)}x&\defeq \log(\log^{(r-1)}x), & \exp^{(r)}x&\defeq \exp(\exp^{(r-1)}x)
+\quad\text{for $r\geq 1$}.
+\end{align*}
+Moreover we define $\log^* x$ to be the smallest integer $r$ for which
+$\log^{(r)} x<2$. 
+
+\subsection{Communication protocols}
+
+\subsection{Random variables and distributions}
+We denote the distribution of a random
+variable $X$ by $\dist(X)$ and the support set of it by
+$\supp(X)$. We write $\Pr_{x\sim\nu}[\cdot]$ and
+$\E_{x\sim\nu}[\cdot]$ for the probability and expectation,
+respectively, when $x$ is distributed according to a
+distribution $\nu$. We write $\mu$ for the uniform distribution
+on $[t]^n$. For instance, for a set $S\subseteq [t]^n$, we have
+$\mu(S) = |S| / t^n$.
+
+Throughout the paper we ignore divisibility problems, e.g., in
+\autoref{lem:determine-s} in \autoref{sec:elementary} we assume
+that $t^n/2^{c+1}$ is an integer. Dealing with rounding issues
+would complicate the presentation but does not add to the
+complexity of the proofs.
+\begin{theorem}
+Chernoff bound.
+\end{theorem}
+
+\subsection{Facts from information theory}
+Here we briefly review some definitions and facts from
+information theory that we use in this paper. For a random
+variable $X$, we denote its binary Shannon entropy by $\ent{X}$.
+We will also use conditional entropies $\ent{X\emid
+Y}=\ent{X,Y}-\ent{Y}$. Let $\mu$ and $\nu$ be two probability
+distributions, supported on the same set $S$. We denote the
+binary Kullback-Leibler divergence between $\mu$ and $\nu$ by
+$\D(\mu\dmid \nu)$. A random variable with Bernoulli
+distribution with parameter $p$ takes the value $1$ with
+probability $p$ and the value $0$ with probability $1-p$. The
+entropy of this variable is denoted by $\entb{p}$. For two reals
+$p,q\in (0,1)$, we denote by $\BD(p\dmid q)$ the divergence
+between the Bernoulli distributions with parameters $p$ and $q$.
+
+If $X\in[t]^n$ and $L\subseteq[n]$, then the projection of $X$
+to the coordinates in $L$ is denoted by $X_L$. Namely, $X_L$ is
+obtained from $X=(X_1,\ldots,X_n)$ by keeping only the
+coordinates $X_i$ with $i\in L$. The following lemma of Chung et
+al.~\cite{ChungGFS1986} relates the entropy of a variable to the
+entropy of its projections.
+\begin{lemma}[Chung et al.~\cite{ChungGFS1986}]
+\label{lem:ent-subset}
+Let $\supp(X)\subseteq[t]^n$. We have
+$\frac{l}{n}\ent{X} \leq \E_L[\ent{X_L}]$, where the expectation is taken for
+a uniform random $l$-subset $L$ of $[n]$.
+\end{lemma}

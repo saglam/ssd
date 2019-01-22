@@ -1,0 +1,285 @@
+% !TeX root = ssd.tex
+\section{An isoperimetric inequality on the discrete grid}
+\label{sec:isoperimetry}
+The isoperimetric problem on the Boolean cube $\{0,1\}^n$ proved
+extremely useful in theoretical computer science. The problem is
+to determine the set $S\subseteq \{0,1\}^n$ of a fixed
+cardinality with the smallest ``perimeter'', or more generally,
+to establish connection between the size of a set and the size
+of its boundary. Here the boundary can be defined in several
+ways. Considering the Boolean cube as a graph where vertices of
+Hamming distance 1 are connected, the {\em edge boundary} of a
+set $S$ is defined as the set of edges connecting $S$ and its
+complement, while the {\em vertex boundary} consists of the
+vertices outside $S$ having a neighbor in $S$.
+
+Harper \cite{Harper1964} showed that the vertex boundary of a
+Hamming ball is smallest among all sets of equal size, and the
+same holds for the edge boundary of a subcube. These results can
+be generalized to other cardinalities \cite{Hart1976}; see the
+survey by Bezrukov \cite{Bezrukov1994}.
+
+Consider the metric space over the set $[t]^n$ endowed 
+with the Hamming distance.
+Let $f$ be a concave function on the nonnegative integers 
+and $1\le M<n$ be an integer. 
+We consider the following
+value as a generalized perimeter of a set $S\subseteq[t]^n$:
+\begin{align*}
+%\label{eq:nbr}
+\E_{x\sim\mu}[f\left(\left|B_M(x)\cap S\right|\right)],
+\end{align*}
+where $B_M(x)=\{y\in[t]^n\mid\Match(x,y)\ge M\}$ is the radius
+$n-M$ Hamming ball around $x$. Note that when $M=n-1$ and $f$ is
+the counting function given as $f(0)=0$ and $f(l)=1$ for $l>0$
+(which is concave), the above quantity is exactly the normalized
+size of the vertex boundary of $S$. For other concave functions
+$f$ and parameters $M$ this quantity can still be considered a
+measure of how ``spread out'' the set $S$ is. We conjecture that
+$n$-dimensional boxes minimize this measure in every case.
+
+\begin{conjecture}
+\label{conj:product}
+Let $1\le k\le t$ and $1\le M<n$ be integers. 
+Let $S$ be an arbitrary subset of $[t]^n$ of size $k^n$ and 
+$P=[k]^n$. We have
+\begin{align*}
+\E_{x\sim\mu}[f\left(\left|B_M(x)\cap P\right|\right)]\leq
+\E_{x\sim\mu}[f\left(\left|B_M(x)\cap S\right|\right)].
+\end{align*}
+\end{conjecture}
+Even though a proof of \autoref{conj:product} remained elusive,
+in \autoref{thm:isoperimetry}, we prove an approximate version
+of this result, where, for technical reasons, we have to
+restrict our attention to a small fraction of the coordinates.
+Having this weaker result allows us to prove our communication
+complexity lower bound in the next section but proving the
+conjecture here would simplify this proof.
+
+We start the technical part of this section by introducing the
+notation we will use. For $x,y\in[t]^n$ and $i\in[n]$ we write
+$x\sim_iy$ if $x_j=y_j$ for $j\in[n]\setminus\{i\}$. Observe
+that $\sim_i$ is an equivalence relation. A set $K\subseteq
+[t]^n$ is called an {\em $i$-ideal} if $x\sim_i y$, $x_i<y_i$
+and $y\in K$ implies $x\in K$. We call a set $K\subseteq[t]^n$
+an {\em ideal} if it is an $i$-ideal for all $i\in[n]$.
+
+For $i\in[n]$ and $x\in[t]^n$ we define
+$\down_{i}(x)=(x_1,\ldots,x_{i-1},x_i-1,x_{i+1},\ldots,x_n)$. 
+We have $\down_i(x)\in[t]^n$ whenever $x_i>1$.
+%
+Let $K\subseteq [t]^n$ be a set, $i\in[n]$ and $2\le a\in[t]$. 
+For $x\in K$, we define $\down_{i,a}(x,K)=\down_i(x)$ if 
+$x_i=a$ and $\down_i(x)\notin K$ and we set 
+$\down_{i,a}(x,K)=x$ otherwise. We further define
+$\down_{i,a}(K)=\{\down_{i,a}(x,K)\mid x\in K\}$.
+For $K\subseteq[t]^n$ and $i\in[n]$ we define
+\begin{align*}
+%\label{eq:down}
+\down_i(K)\defeq\setbuilder{y\in[t]^n}{y_i\le\abs{\setbuilder{z\in K}{y\sim_iz}}}.
+\end{align*}
+Finally for $K\subseteq[t]^n$ we define
+\begin{align*}
+%\label{eq:down-cascade}
+\down(K)\defeq\down_1\nparen{\down_2\nparen{\ldots\down_n(K)\ldots}}.
+\end{align*}
+The following lemma states few simple observations about these
+down operations.
+\begin{lemma}
+\label{lem:down}
+Let $K\subseteq[t]^n$ be a set and let $i,j\in[n]$ be integers. 
+The following hold.
+\begin{enumerate}[(i)]
+\item $\down_i(K)$ can be obtained from $K$ by applying several
+  operations $\down_{i,a}$.
+\item $|\down_{i,a}(K)|=|K|$ for each $2\le a\le t$, 
+$|\down_i(K)|=|K|$ and $|\down(K)|=|K|$.
+\item $\down_i(K)$ is an $i$-ideal and
+if $K$ is a $j$-ideal, then $\down_i(K)$ is also a $j$-ideal.
+\item $\down(K)$ is an ideal. For any $x\in\down(K)$ we have 
+$P\defeq[x_1]\times[x_2]\times\cdots\times[x_n]
+\subseteq\down(K)$ and there exists a set $T\subseteq K$ with
+$P= \down(T)$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+For statement (i) notice that as long as $K$ is not 
+an $i$-ideal one of the operations $\down_{i,a}$ 
+will not fix $K$ and hence will decrease $\sum_{x\in K}x_i$. 
+Thus a finite sequence of these operations will transform $K$ 
+into an $i$-ideal. 
+It is easy to see that the operations $\down_{i,a}$ preserve the
+number of elements in each equivalence class of $\sim_i$, 
+thus the $i$-ideal we arrive at must indeed be $\down_i(K)$.
+
+Statement (ii) follows directly from the definitions of each of
+these $\down$ operations.
+ 
+The first claim of statement (iii), namely that $\down_i(K)$ is
+an $i$-ideal, is trivial from the definition. Now assume $j\ne
+i$ and $K$ is a $j$-ideal, $y\in\down_i(K)$ and $y_j>1$. To see
+that $\down_i(K)$ is a $j$-ideal it is enough to prove that
+$\down_j(y)\in\down_i(K)$. Since $y\in\down_i(K)$, there are
+$y_i$ distinct vectors $z\in K$ that satisfy $z\sim_i y$.
+Considering the vectors $\down_j(z)\sim_i\down_j(y)$ and using
+that these distinct vectors are in the $j$-ideal $K$ proves that
+$\down_j(y)$ is indeed contained in $\down_i(K)$.
+
+By statement (iii), $\down(K)$ is an $i$-ideal for each $i\in
+[n]$. Therefore $\down(K)$ is an ideal and the first part of
+statement (iv), that is, $P\subseteq K'$ follows. We prove the
+existence of suitable $T$ by induction on the dimension $n$. The
+base case $n=0$ (or even $n=1$) is trivial. For the inductive
+step consider $K'=\down_2(\down_3(\ldots\down_n(K)\ldots))$. As
+$x\in\down(K)=\down_1(K')$, we have distinct vectors $x^{(k)}\in
+K'$ for $k=1,\ldots, x_1$, satisfying $x^{(k)}\sim_1x$. Notice
+that the construction of $K'$ from $K$ is performed
+independently on each of the $(n-1)$-dimensional ``hyperplanes''
+$S^l=\{y\in[t]^n\mid y_1=l\}$ as none of the operations
+$\down_2,\ldots,\down_n$ change the first coordinate of the
+vectors. We apply the inductive hypothesis to obtain the sets
+$T^{(k)}\subseteq S^{x^{(k)}_1}\cap K$ such that
+$\down_2(\ldots\down_n(T^{(k)})\ldots)=\{x^{(k)}_1\}
+\times[x_2]\times\cdots\times[x_n]$. Using again that these sets
+are in distinct hyperplanes and the operations
+$\down_2,\ldots,\down_n$ act separately on the hyperplanes
+$S^l$, we get for $T:=\cup_{k=1}^{x_1}T^{(k)}$ that
+$$\down_2(\dots\down_n(T)\dots)=\{x^{(k)}_1\mid
+k\in[x_1]\}\times[x_2]\times\cdots\times[x_n].$$ Applying
+$\down_1$ on both sides finishes the proof of this last part of
+the lemma.
+\end{proof}
+
+For sets $x\in[t]^n$, $I\subseteq[n]$, and integer $M\in[n]$ we
+define $B_{I,M}(x)=\{y\in[t]^n\mid\Match(x_I,y_I)\ge M\}$. The
+projection of $B_{I,M}$ to the coordinates in $I$ is the Hamming
+ball of radius $|I|-M$ around the projection of $x$.
+\begin{lemma}
+\label{lem:list}
+Let $I\subseteq[n]$, $M\in[n]$ and let $f$ be a concave function
+on the nonnegative integers. For arbitrary $K\subseteq [t]^n$ we
+have
+$$\E_{x\sim\mu}[f(|B_{I,M}(x)\cap\down(K)|)]\le
+\E_{x\sim\mu}[f(|B_{I,M}(x)\cap K|)].$$
+\end{lemma}
+
+\begin{proof}
+By \autoref{lem:down}(i), the set $\down(K)$ can be obtained
+from $K$ by a series of operations $\down_{i,a}$ with various
+$i\in[n]$ and $2\le a\le t$. Therefore, it is enough to prove
+that the expectation in the lemma does not increase in any one
+step. Let us fix $i\in[n]$ and $2\le a\le t$. We write
+$N_x=B_{I,M}(x)\cap K$ and $N'_x=B_{I,M}(x)\cap\down_{i,a}(K)$
+for $x\in[t]^n$. We need to prove that
+\begin{align*}
+\E_{x\sim\mu}[f(|N_x|)]\ge\E_{x\sim\mu}[f(|N'_x|)].
+\end{align*} 
+Note that $|N_x|=|N'_x|$ whenever $i\notin I$ or
+$x_i\notin\{a,a-1\}$. Thus, we can assume $i\in I$ and
+concentrate on $x\in[t]^n$ with $x_i\in\{a,a-1\}$. It is enough
+to prove $f(|N_x|)+f(|N_y|)\ge f(|N'_x|)+f(|N'_y|)$ for any pair
+of vectors $x,y\in[t]^n$, satisfying $x_i=a$, and
+$y=\down_i(x)$.
+
+Let us fix such a pair $x,y$ and set $C=\{z\in
+K\setminus\down_{i,a}(K)\emid\Match(x_I,z_I)=M\}$. Observe that
+$N_x = N'_x \cup C$ and $N'_x\cap C=\emptyset$. Similarly,
+observe that $N'_y = N_y \cup \down_{i,a}(C)$ and $N_y \cap
+\down_{i,a}(C)=\emptyset$. Thus we have $|N'_x|=|N_x|-|C|$ and
+$|N'_y|=|N_y|+|\down_{i,a}(C)|=|N_y|+|C|$.
+
+The inequality $f(|N_x|)+f(|N_y|)\ge f(|N'_x|)+f(|N'_y|)$
+follows now from the concavity of $f$, the inequalities
+$|N'_x|\le|N_y|\le|N'_y|$ and the equality
+$|N_x|+|N_y|=|N'_x|+|N'_y|$. Here the first inequality follows
+from $\down_{i,a}(N'_x)\subseteq\down_{i,a}(N_y)$, the second
+inequality and the equality comes from the observations of the
+previous paragraph.
+\end{proof}
+
+\begin{lemma}
+\label{lem:find-prod}
+Let $K\subseteq [t]^n$ be arbitrary. 
+There exists a vector $x\in K$ having at least $n/5$ 
+coordinates that are greater than 
+$k\defeq\frac{t}{2}\mu(K)^{5/(4n)}$.
+\end{lemma}
+\begin{proof}
+The number of vectors that have at most $n/5$ coordinates 
+greater than $k$ can be upper bounded as 
+\begin{align*}
+{n\choose n/5} t^{n/5} k^{4n/5} 
+= t^n {n\choose n/5} (k/t)^{4n/5} 
+= |K|\frac{{n \choose n/5}}{2^{4n /5}},
+%\label{eq:quant}
+\end{align*}
+where in the last step we have substituted
+$\frac{k}{t}=\frac{1}{2}\mu(K)^{5/(4n)}$ and 
+$\mu(K) = |K| / t^n$.
+Estimating ${n\choose n/5}\le 2^{n\entb{1/5}}$, 
+we obtain that the above quantity is less than $|K|$.
+Therefore, there must exists an $x\in K$ that has at least 
+$n/5$ coordinates greater than $k$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:isoperimetry}
+Let $S$ be an arbitrary subset of $[t]^n$. Let
+$k=\frac{t}{2}\mu(S)^{5/(4n)}$ and $M = nk/(20t)$. There exists
+a subset $T\subset S$ of size $k^{n/5}$ and $I\subset [n]$ of
+size $n/5$ such that, defining $N_x=\{x'\in
+T\mid\Match(x_I,x'_I)\ge M\}$, we have
+\begin{enumerate}[(i)]
+\item $\Pr_{x\sim\mu}[N_x=\emptyset] \le 5^{-M}$ and
+\item $\E_{x\sim \mu}[\log|N_x|]\geq (n/5-M)\log k - 
+n\log k /5^M$, where we take $\log 0 = -1$ to make the above 
+expectation exist.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+By \autoref{lem:down}(ii), we have $|\down(S)|=|S|$. By
+\autoref{lem:find-prod}, there exists an $x\in\down(S)$ having
+at least $n/5$ coordinates that are greater than $k$. Let
+$I\subset[n]$ be a set of $n/5$ coordinates such that $x_i\geq
+k$ for a fixed $x\in\down(S)$. By \autoref{lem:down}(iv),
+$\down(S)$ is an ideal and thus it contains the set
+$P=\prod_iP_i$, where $P_i=[k]$ for $i\in I$ and $P_i=\{1\}$ for
+$i\notin I$. Also by \autoref{lem:down}(iv), there exists a
+$T\subseteq S$ such that $P = \down(T)$. We fix such a set $T$.
+Clearly, $|T|=k^{n/5}$.
+
+For a vector $x\in[t]^n$, let $h(x)$ be the number of
+coordinates $i\in I$ such that $x_i\in [k]$. Note that
+$\E_{x\sim \mu}[h(x)] = 4M$ and $h(x)$ has a binomial
+distribution. By the Chernoff bound we have $\Pr_{x\sim
+\mu}[h(x)<M] < 5^{-M}$. For $x$ with $h(x)\ge M$ we have
+$|B_{I,M}(x)\cap P|\ge k^{n/5-M}$, but for $h(x)<M$ we have
+$B_{I,M}(x)\cap P=\emptyset$. With the unusual convention
+$\log0=-1$ we have
+\begin{align*}
+\E_{x\sim \mu} [\log|B_{I,M}(x)\cap P|]
+&\ge\Pr[h(x)\ge M](n/5-M)\log k-\Pr[h(x)<M]\\
+&>(n/5-M)\log k-n\log k/5^M
+\end{align*}
+
+We have $\down(T)=P$ and our unusual $\log$ is concave on the
+nonnegative integers, so \autoref{lem:list} applies and proves
+statement (ii):
+\begin{align*}
+\E_{x\sim \mu}[\log |N_x|] &\ge\E_{x\sim \mu} 
+[\log|B_{I,M}(x)\cap P|]\\
+&\ge(n/5-M)\log k - n\log k /5^M.
+\end{align*}
+
+To show statement (i), we apply \autoref{lem:list} with the
+concave function $f$ defined as $f(0)=-1$ and $f(l)=0$ for all
+$l>0$. We obtain that
+\begin{align*}
+\Pr_{x\sim\mu}[N_x=\emptyset]
+&=-\E_{x\sim\mu}[f(|N_x|)]\\
+&\le-\E_{x\sim\mu}[f(|B_{I,M}(x)\cap P|)]\\
+&=\Pr_{x\sim\mu}[B_{I,M}(x)\cap P=\emptyset]\\
+&<5^{-M}.
+\end{align*}
+This completes the proof.
+\end{proof}

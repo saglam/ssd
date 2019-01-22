@@ -1,0 +1,543 @@
+% !TeX root = ssd.tex
+\section{Lower bound for multiple round protocols}
+\label{sec:lowerbound}
+
+%Let us start with an informal overview of the proof.
+
+%Recall that by $\mu$ we denoted the uniform 
+%distribution on $[t]^n$.
+
+%\subsection{Inspecting the protocol for the large instance}
+%\label{sec:inspect}
+In this section we prove our main lower bound result:
+\begin{theorem}
+\label{thm:main}
+For any $r\leq\log^*n$, an $r$-round probabilistic protocol for
+$\EE_n$ with error probability at most $1/3$ sends at least one
+message of size $\Omega(n\log^{(r)}n)$.
+\end{theorem}
+
+Note that the $r=1$ round case of this theorem was proved as
+\autoref{thm:singleround} in \autoref{sec:elementary}. The other
+extreme, which immediately follows from \autoref{thm:main}, is
+the following.
+
+\begin{corollary}
+Any probabilistic protocol for $\EE_n$ with maximum message size
+$O(n)$ and error $1/3$ has at least $\log^* n - O(1)$ rounds.
+\end{corollary}
+
+\autoref{thm:main} is a direct consequence of the corresponding
+statement on deterministic protocols with small distributional
+error on uniform distribution; see \autoref{thm:main2} at the
+end of this section. Indeed, we can decrease the error of a
+randomized protocol below any constant $\epsilon>0$ for the
+price of increasing the message length by a constant factor,
+then we can fix the coins of this low error protocol in a way
+that makes the resulting deterministic protocol $Q$ err in at
+most $\epsilon$ fraction of the possible inputs. Applying
+\autoref{thm:main2} to the protocol $Q$ proves
+\autoref{thm:main}.
+
+In the rest of this section we use round-elimination to prove
+\autoref{thm:main2}, that is, we will use $Q$ to solve smaller
+instances of the exists-equal problem in a way that the first
+message is always the same, and hence can be eliminated.
+
+Suppose Alice sends the first message of $c$ bits in $Q$. By
+\autoref{lem:determine-s}, there exists a $S\subset [t]^n$ of
+size $\mu(S)=2^{-c-1}$ such that the first message of Alice is
+fixed when $x\in S$ and we have $\Pr_{y\sim
+\mu}[Q(x,y)\neq\EE(x,y)]\leq 2\epsilon$ for all $x\in S$. Fix
+such a set $S$ and let $k\defeq t/2^{\frac{5(c+1)}{4n} + 1}$ and
+$M \defeq nk/(20t)$. By \autoref{thm:isoperimetry}, there exists
+a $T\subset S$ of size $k^{n/5}$ and $I\subset[n]$ of size $n/5$
+such that defining
+\begin{align*}
+N_x=\{y\in T\mid\Match(x_I,y_I)\ge M\}
+\end{align*}
+we have $\Pr_{x\sim\mu}[N_x=\emptyset] \le 5^{-M}$ and
+$\E_{x\sim \mu}[\log|N_x|]\geq (n/5-M)\log k - n\log k /5^M$.
+Let us fix such sets $T$ and $I$. Note also that
+\autoref{thm:isoperimetry} guarantees that $T$ is a strict
+subset of $S$. Designate an arbitrary element of $S\setminus T$
+as $x'_e$.
+
+\subsection{Embedding the smaller problem}
+\label{sec:embed}
+The players embed a smaller instance $u,v\in[t']^{n'}$ of the
+exists-equal problem in $\EE_n$ concentrating on the coordinates
+$I$ determined above. We set $n'\defeq M/10$ and $t'\defeq4n'$.
+Optimally, the same embedding should guarantee low error
+probability for all pairs of inputs, but for technical reasons
+we need to know the number of coordinate agreements
+$\Match(u,v)$ for the input pairs $(u,v)$ in the smaller problem
+having $\EE_{n'}(u,v)=1$. Let $R\ge1$ be this number, so we are
+interested in inputs $u,v\in[t']^{n'}$ with $\Match(u,v)=0$ or
+$R$. We need this extra parameter so that we can eliminate a
+non-constant number of rounds and still keep the error bound a
+constant. For results on constant round protocols one can
+concentrate on the $R=1$ case.
+
+In order to solve the exist-equal problem with parameters $t'$
+and $n'$ Alice and Bob use the joint random source to turn their
+input $u,v\in[t']^{n'}$ into longer random vectors
+$X',Y\in[t]^n$, respectively, and apply the protocol $Q$ above
+to solve this exists-equal problem for these larger inputs. Here
+we informally list the main requirements on the process
+generating $X'$ and $Y$. We require these properties for the
+random vectors $X',Y\in[t]^n$ generated from a fixed pair
+$u,v\in[t']^{n'}$ satisfying $\Match(u,v)=0$ or $R$.
+
+\begin{enumerate}[(P1)]
+\item $\EE(X',Y)=\EE(u,v)$ with large probability,
+%\item if $\Match(u,v)=r \geq 1$ and $R\leq r$, then 
+%$\Pr[\EE(X', Y)=1] \ge 0.80$;
+\label{prop:2}
+\item $\supp(X')=T\cup \{x'_e\}$ and
+\label{prop:3}
+\item $Y\emid X'$ is distributed almost uniformly
+\label{prop:4}
+\end{enumerate}
+
+Combining these properties with the fact that $\Pr_{y\sim
+\mu}[Q(x,y)\neq\EE(x,y)]\leq 2\epsilon$ for each $x\in S$, we
+will argue that for the considered pairs of inputs $Q(X',Y)$
+equals $\EE(u,v)$ with large probability, thus the combined
+protocol solves the small exists-equal instance with small
+error, at least for input pairs with $\Match(u,v)=0$ or $R$.
+Furthermore, by \propref{prop:3} the first message of Alice will
+be fixed and hence does not need to be sent, making the combined
+protocol one round shorter.
+
+The random variables $X'$ and $Y$ are constructed as follows.
+Let $m\defeq 2n/(MR)$ be an integer. Each player repeats his or
+her input ($u$ and $v$, respectively) $m$ times, obtaining a
+vector of size $n/(5R)$. Then using the shared randomness, the
+players pick $n/(5R)$ uniform random maps $m_i:[t']\to[t]$
+independently and apply $m_i$ to $i$\/th coordinate.
+Furthermore, the players pick a uniform random 1-1 mapping
+$\pi:[n/(5R)]\to I$ and use it to embed the coordinates of the
+vectors they constructed among the coordinates of the vectors
+$X$ and $Y$ of length $n$. The remaining $n-n/(5R)$ coordinates
+of $X$ is picked uniformly at random by Alice and similarly, the
+remaining $n-n/(5R)$ coordinates of $Y$ is picked uniformly at
+random by Bob. Note that the marginal distribution of both $X$
+and $Y$ are uniform on $[t]^n$. If $\Match(u,v)=0$ the vectors
+$X$ and $Y$ are independent, while if $\Match(u,v)=R$, then $Y$
+can be obtained by selecting a random subset of $I$ of
+cardinality $mR$, copying the corresponding coordinates of $X$
+and filling the rest of $Y$ uniformly at random.
+
+This completes the description of the random process for Bob.
+However Alice generates one more random variable $X'$ as
+follows. Recall that $N_x=\{z\in T\mid\Match(z_I,x_I)\ge M\}$.
+The random variable $X'$ is obtained by drawing $x\sim X$ first
+and then choosing a uniform random element of $N_x$. In the
+(unlikely) case that $N_x=\emptyset$, Alice chooses $X'=x'_e$.
+
+Note that $X'$ either equals $x'_e$ or takes values from $T$,
+hence \propref{prop:3} holds. In the next lemma we quantify and
+prove \propref{prop:2} as well.
+
+\begin{lemma}
+\label{lem:error}
+Assume $n\ge3$, $M\ge2$ and $u,v\in[t']^{n'}$. We have
+\begin{enumerate}[(i)]
+\item 
+if $\Match(u,v)=0$ then $\Pr[\EE(X',Y)=0] > 0.77$;
+\item 
+if $\Match(u,v)=R$, then
+$\Pr[\EE(X', Y)=1] \ge 0.80$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For the first claim, note that when $\Match(u,v) = 0$, the
+random variables $X$ and $Y$ are independent and uniformly
+distributed. We construct $X'$ based on $X$, so its value is
+also independent of $Y$. Hence $\Pr[\EE(X',Y)=0]=(1-1/t)^n$.
+This quantity goes to $e^{-1/4}$ since $t=4n$ and is larger than
+$0.77$ when $n\geq 3$. This establishes the first claim.
+
+For the second claim let $J = \{i\in I\mid X_i=Y_i\}$ and
+$K=\{i\in I\mid X'_i = X_i\}$. By construction,
+$|J|=\Match(X_{I},Y_{I})\ge mR$ and $|K|=\Match(X'_{I}, X_I)
+\geq M$ unless $N_X=\emptyset$. By our construction, each
+$J\subset I$ of the same size is equally likely by symmetry,
+even when we condition on a fix value of $X$ and $X'$. Thus we
+have $\E[|J\cap K|\emid N_X\ne\emptyset]\ge mRM/|I|=10$ and
+$\Pr[J\cap K=\emptyset\emid N_X\ne\emptyset]<e^{-10}$. Note that
+$X$ is distributed uniformly over $[t]^n$, therefore by
+Theorem~\ref{thm:isoperimetry}(i) the probability that
+$N_X=\emptyset$ is at most $5^{-M}$. Note that
+$\Match(X',Y)\ge|J\cap K|$ and thus
+$\Pr[\EE(X',Y)=0]\le\Pr[J\cap K=\emptyset]\le\Pr[J\cap
+K=\emptyset\emid N_X\ne\emptyset] +\Pr[N_X=\emptyset]\le
+e^{-10}+5^{-M}$. This completes the proof.
+\end{proof}
+
+We quantify the correlation of $X'$ and $Y$ stated in \propref{prop:4} 
+by their mutual information. This mutual information argument is
+postponed to the next subsection; here we show how such a bound
+to the mutual information implies that the error introduced by $Q$ is
+small.
+
+\begin{lemma}
+\label{lem:kl-err}
+Let $\gamma = \Pr[Q(X',Y)\neq \EE(X',Y)]$. 
+If $\gamma \ge 2\eps$, then we have $\kldivb{\gamma}{2\eps}\le \muti{X'}{Y}$.
+\end{lemma}
+\begin{proof}
+For all fixings $x\in\supp(X')$ and a distribution $\nu$
+on $[t]^n$, define 
+\begin{align*}
+e_{x}(\nu) \defeq \Pr_{y\sim \nu}[Q(x, y)\neq\EE(x, y)].
+\end{align*}
+By the definition of mutual information and the conditional divergence, 
+%We prove the contrapositive of the
+%statement of the lemma, that is assuming $\Pr_{y\sim Y|X'=x'}[Q(x',y) 
+%\neq \EE(x',y)]>\gamma$ we prove $\Ent(Y\emid X'=x')< n\log t - 
+%\BD(\gamma \dmid 2\epsilon)$:
+\begin{align*}
+\muti{X'}{Y}
+    &=   \kldiv{Y\emid X'}{Y}\\
+    &=   \E_{x\sim X'}\kldiv{Y\emid X'=x}{Y}\\
+    &\ge \E_{x\sim X'}
+         \kldivb{e_x\nparen{\dist(Y\emid X'=x)}}
+                         {e_x\nparen{\mu}}\\
+    &\ge \kldivb{\E_{x\sim X'}e_x\nparen{\dist(Y\emid X'=x)}}
+                         {\E_{x\sim X'}e_x\nparen{\mu}}\\
+    &= \kldivb{\gamma}{\E_{x\sim X'}e_x\nparen{\mu}}\\
+    &\ge \kldivb{\gamma}{2\eps}
+\end{align*}
+where the first inequality is the data processing inequality,
+the second inequality follows from the convexity of $\kldiv{\cdot}{\cdot}$
+and the last inequality follows from 
+the guarantee $e_x(\mu)\le 2\eps$ 
+for all $x$ that is provided by \autoref{lem:determine-s}
+and the assumption of the present lemma that $\gamma\ge 2\eps$.
+\end{proof}
+
+\subsection{Establishing \propref{prop:4}}
+
+We quantify \propref{prop:4} using the mutual information. 
+If $\Match(u,v)=R$ our process generates $X$
+and $Y$ with the expected number $\E[\Match(X_I,Y_I)]$ of
+matches only slightly more than the minimum $mR$. We lose most
+of these matches with $Y$ when we replace $X$ by $X'$ and only
+an expected constant number remains. A constant number of forced
+matches with $X'$ within $I$ restricts the number of possible
+vectors $Y$ but it only decreases the entropy by $O(1)$. The
+calculations in this subsection make this intuitive argument
+precise.
+
+
+\begin{lemma}
+\label{lem:x-uniform} For any $u,v\in[t']^{n'}$ we have
+$\muti{X}{X'}\le M\log k  + n\log k / 5^M$.
+\end{lemma}
+\begin{proof}
+We have
+\begin{align*}
+\muti{X}{X'} = \ent{X'} - \ent{X'\emid X}
+\end{align*}
+and 
+$\ent{X'}\le \log |\supp(X')|
+    = \log \nparen{|T|+1}\le \frac{n}{5}\log k + 1$.
+
+Observe that $\ent{X'\emid X} = \E_{x\sim
+\mu}[\log|N_x|]$, where $\log 0$ is now taken to be $0$. From
+\autoref{thm:isoperimetry}(ii) we get $\ent{X'\emid X}\geq
+\frac{n}{5}\log k - M\log k - n\log k/5^M$.
+Plugging in, the $\frac{n}{5}\log k$ terms cancel and we get
+the statement of the lemma.
+\end{proof}
+
+
+\begin{lemma}
+\label{lem:y-uniform}
+Let $X',Y$ be as constructed above. The following hold.
+\begin{enumerate}[(i)]
+\item If $\Match(u,v)=0$ we have
+$\muti{X'}{Y} = 0$
+\item If $M>100\log n$ and $\Match(u,v)=R$ we have
+$\muti{X'}{Y} = O(1).$
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Part (i) holds as $Y$ is independent of $X'$
+whenever $\EE(u,v)=0$ by construction.
+
+For part (ii) recall that if $\Match(u,v)=R$ one can construct
+$X$ and $Y$ by uniformly selecting a size $mR$ set $L\subseteq
+I$ and selecting $X$ and $Y$ uniformly among all pairs
+satisfying $X_L=Y_L$. Recall that $L$ is the set of coordinates
+the $mR$ matches between $u^m$ and $v^m$ were mapped. These are
+the ``intentional matches'' between $X_I$ and $Y_I$. Note that
+there may be also ``unintended matches'' between $X_I$ and
+$Y_I$, but not too many: their expected number is
+$(n/5-mR)/t<1/20$. As given any fixed $L$, the marginal
+distribution of both $X$ and $Y$ are still uniform, so in
+particular $X$ is independent of $L$ and so is $X'$ constructed
+from $X$. Let us expand $\muti{X'L}{Y}$ using the chain rule in
+two different ways obtaining
+\begin{align}
+\muti{X'L}{Y}
+    &= \muti{X'}{Y} + \muti{L}{Y\emid X'}\nonumber\\
+    &= \muti{L}{Y} + \muti{X'}{Y\emid L}\label{teq:mutexpand}.
+\end{align}
+Since the first term of \eqref{teq:mutexpand} is zero 
+by independence of $Y$ and $L$, we conclude
+\begin{align}
+\muti{X'}{Y}
+    &= \muti{X'}{Y\emid L} - \muti{L}{Y\emid X'}\nonumber\\
+    &= \muti{X'}{Y\emid L} - \muti{L}{X'Y}\label{teq:twoterms},
+\end{align}
+where the second inequality follows again by the chain rule 
+and the fact that $X'$ and $L$ are independent.
+Let us understand the terms of \eqref{teq:twoterms} one by one.
+First we  expand the first term by the chain rule, obtaining
+\begin{align*}
+\muti{X'}{Y\emid L} = \muti{X'}{Y_L\emid L} + \muti{X'}{Y_{[n]\setminus L}\emid LY_L}
+\end{align*}
+however since $Y_{[n]\setminus L}$ is uniformly distributed for any fixed
+$L$, $X'$ and $Y_L$, the second term on the right hand side is zero. 
+By construction we have $X_L=Y_L$, thus
+\begin{align*}
+\muti{Y_L}{X'\emid L} 
+    &= \muti{X_L}{X'\emid L}\\
+    &\le \frac{mR}{n/5}\muti{X_I}{X'}\\
+    &\le 10\log k + \frac{MR}{5^{M-1}}\log k,
+\end{align*}
+where the first inequality follows by \autoref{lem:ent-subset}
+as $L$ is a uniform and independent of $X$ and $X'$ and the
+second inequality follows from \autoref{lem:x-uniform} that we
+will prove shortly and the formula defining $m$.
+
+Here, when condition on $L$, the correlation of $X'$ and $Y$
+is roughly $10\log k$ bits, which is significantly more than the
+constant bound we seek. Next we will see that all but a constant bits
+of this correlation comes from having observed what $L$ is.
+The next term, $\ent{L}$ is easy to compute as $L$ is a uniform
+subset of $I$ of size $mR$:
+\begin{align*}
+\ent{L}=\log{n/5\choose mR}
+\end{align*}
+
+It remains to bound the term $\ent{L\emid Y, X'}$. Let
+$Z=\{i\mid i\in I \text{ and } X'_i=Y_i\}$. Note that $Z$ can be
+derived from $X',Y$ (as $I$ is fixed) hence 
+$\ent{L\emid Y,X'}\leq \ent{L\emid Z}$. 
+Further, let $C=|Z\setminus L|$. We obtain
+\begin{align*}
+\ent{L\emid Y,X'}&\le\ent{L\emid Z}\leq \ent{L\emid Z, C} + \ent{C}\\
+&< \E_{Z,C}\left[\log{n/5-|Z|+C \choose mR - |Z|+C}\right]
++ \E_{Z,C}\left[\log {|Z| \choose C}\right]+2
+\end{align*}
+where we used $\ent{C}<2$. Note that for any fixed $x'\in T$ and
+$x\in \supp(X\emid X'=x')$, we have $$\E[|Z|-C\emid X=x,
+X'=x']=\Match(x_I,x_I') mR /(n/5) \geq 10$$ as $\Match(x_I,
+x_I')\geq M$ by definition.
+Hence we have $$\log{n/5\choose mR}-\log{n/5-|Z|+|C|\choose
+mR-|Z|+|C|}\ge10\log\frac n{5m}-O(1),$$ $$\E_{Z,C}\left[\log
+{|Z| \choose C}\right] \le \E[|Z|] < 20.$$ Summing the estimates
+above for the various parts of $\ent{Y\emid X'}$ the statement
+of the lemma follows.
+\end{proof}
+
+It remains to prove the following simple lemma that ``reverses''
+the conditional entropy bound in \autoref{thm:isoperimetry}(ii):
+
+\subsection{The round elimination lemma}
+
+Let $\nu_n$ be the uniform distribution on $[t]^n\times [t]^n$,
+where we set $t=4n$. The following lemma gives the base case of
+the round elimination argument.
+\begin{lemma}\label{lem:terminal} 
+Any 0-round deterministic protocol for $\EE_n$ has at least 0.22
+distributional error on $\nu_n$, when $n\geq 1$.
+\end{lemma}
+\begin{proof}
+The output of the protocol is decided by a single player, say
+Bob. For any given input $y\in[t]^n$ we have $3/4
+\leq\Pr_{x\sim\mu}[\EE(x,y)=0] < e^{-1/4} < 0.78$. Therefore the
+distributional error is at least $0.22$ for any given $y$
+regardless of the output Bob chooses, thus the overall error is
+also at least $0.22$.
+\end{proof}
+Now we give our full round elimination lemma.
+\begin{lemma}\label{lem:roundel} 
+Let $r>0, c ,n$ be an integers such that $c < \frac{4}{5}n\log n$.
+There is a constant $0<\epsilon_0<1/200$ such that if there is
+an $r$-round deterministic protocol with $c$-bit messages for
+$\EE_n$ that has $\epsilon_0$ error on $\nu_n$, then there is an
+$(r-1)$-round deterministic protocol with $O(c)$-bit messages
+for $\EE_{n'}$ that has $\epsilon_0$ error on $\nu_{n'}$, where
+$n' = \Omega(n/2^\frac{5c}{4n})$.
+\end{lemma}
+\begin{proof}
+We start with an intuitive description of our reduction. Let us
+be given the deterministic protocol $Q$ for $\EE_n$ that errs on
+an $\epsilon_0$ fraction of the inputs. To solve an instance
+$(u,v)$ of the smaller $\EE_{n'}$ problem the players perform
+the embedding procedure described in previous subsection $k_0$
+times independently for each parameter $R\in[R_0]$. Here $k_0$
+and $R_0$ are constants we set later. They perform the protocol
+$Q$ in parallel for each of the $k_0R_0$ pairs of inputs they
+generated. Then they take the majority of the $k_0$ outputs for
+a fixed parameter $R$. We show that this result gives the
+correct value of $\EE(u,v)$ with large probability provided that
+$\Match(u,v)=0$ or $R$. Finally they take the OR of these
+results for the $R_0$ possible values of $R$. By the union bound
+this gives the correct value $\EE(u,v)$ with large probability
+provided $\Match(u,v)\le R_0$. Fixing the random choices of the
+reduction we obtain a deterministic protocol. The probability of
+error for the uniform random input can only grow by the small
+probability that $\Match(u,v)>R_0$ and we make sure it remains
+below $\epsilon_0$. The rest of the proof makes this argument
+precise.
+
+For random variables $X'$ and $Y$ constructed in
+\autoref{sec:embed}, \autoref{lem:y-uniform} guarantees that
+$\ent{Y\emid X'}\ge n\log t - \alpha_0$ for some constant
+$\alpha_0$, as long as $M>100\log n$ and $\Match(u,v)=R$. Let
+$\epsilon_0$ be a constant such that $\BD(1/10\dmid 2\epsilon_0)
+> 200(\alpha_0 + 1)$. Note that such $\epsilon_0$ can be found
+as $\BD(1/10\dmid \epsilon)$ tends to infinity as $\epsilon$
+goes to 0. We can bound $\Pr_{(x,y)\sim\nu_m}[\Match(x,y) \ge l]
+\le 1/(4^l l!)$ for all $m\ge1$. We set $R_0$ such that
+$\Pr_{(x,y)\sim\nu_m}[\Match(x,y) \ge R_0 ] \le \epsilon_0 / 2$
+for all $m\ge1$.
+
+Let $Q$ be a deterministic protocol for $\EE_n$ that sends $c <
+(n\log n)/2$ in each round and that has $\epsilon_0$ error on
+$\nu_n$. Let $S$ be as constructed in \autoref{lem:determine-s}
+and let $M$ be as defined in \autoref{thm:isoperimetry}. We have
+$M=\frac{n}{40}2^{\frac{-5(c+1)}{4n}}$ as $t=4n$ and
+$\mu(S)=2^{-(c+1)}$ by \autoref{lem:determine-s}. Note that by
+our choice of $c$, we have $M>100\log n$, hence the hypotheses
+of \autoref{lem:y-uniform} are satisfied.
+
+Let $n' = M/10 = \frac{n}{400}2^{\frac{-5(c+1)}{4n}}$. Now we
+give a randomized protocol $Q'$ for $\EE_{n'}$. Suppose the
+players are given an instance of $\EE_{n'}$, namely the vectors
+$(u,v)\in[4n']^{n'}\times[4n']^{n'}$. Let $k_0 = 10\log (R_0 +
+1/\epsilon_0)$. For $R\in[R_0]$ and $k\in [k_0]$, the players
+construct the vectors $X'_{R,k}$ and $Y_{R,k}$ as described in
+\autoref{sec:embed} with parameter $R$ and with fresh randomness
+for each of the $R_0k_0$ procedures. The players run $R_0 k_0$
+instances of protocol $Q$ in parallel, on inputs $X'_{R,k},
+Y_{R,k}$ for $R\in[R_0]$ and $k\in[k_0]$. Note that the first
+message of the first player, Alice, is fixed for all instances
+of $Q$ by \propref{prop:3} and \autoref{lem:determine-s}.
+Therefore, the second player, Bob, can start the protocol
+assuming Alice has sent the fixed first message. After the
+protocols finish, for each $R\in[R_0]$, the last player who
+received a message computes $b_R$ as the majority of
+$Q(X_{R,k}',Y_{R,k})$ for $k\in [k_0]$. Finally, this player
+outputs $0$ if $b_R=0$ for all $R\in[R_0]$ and outputs $1$
+otherwise.
+
+Suppose now that $\EE(u,v) = 0$. By \autoref{lem:error}(i), we
+have $\Pr[\EE(X'_{R,k},Y_{R,k}) = 0] \ge 0.77$ for each $R$ and
+$k$. Recall that that $Y_{R,k}$ is distributed uniformly for
+each $R$ and $k$ and since $\EE(u,v)=0$, it is independent of
+$X'_{R,k}$. Therefore, by $X'_{R,k}\in S$ (\propref{prop:3}) and
+the fact that $\Pr_{y\sim \mu}[Q(x,y)\neq\EE(x,y)]\leq
+2\epsilon_0$ for all $x\in S$ as per \autoref{lem:determine-s},
+we obtain $\Pr[Q(X'_{R,k},Y_{R,k}) = 0] \ge 0.77 - 2\epsilon_0 >
+0.76$. By the Chernoff bound we have $\Pr[b_R = 1] <
+\epsilon_0/(2R_0)$, and by the union bound $\Pr[Q'\hbox{ outputs
+}0]\ge1-\epsilon_0 /2$.
+
+Let us now consider the case $\Match(u,v) = R$ for some
+$R\in[R_0]$. Fix any $k\in[k_o]$ and set $X'=X'_{R,k}$,
+$Y=Y_{R,k}$. By \autoref{lem:error}(ii), $\Pr[\EE(X',Y) = 1]\ge
+0.80$. By \autoref{lem:y-uniform}, $\ent{Y\emid X'}\geq n\log t
+-\alpha_0$, and so we have $\E_{x'\sim X'}[\ent{Y} - \ent{Y\emid
+X'=x'}] < \alpha_0$. Let $Z=\{x'\mid\ent{Y} - \ent{Y\emid X'=x'}
+> 10\alpha_0\}$. Note that $Y$ is uniform, and has full entropy,
+therefore $\ent{Y} - \ent{Y\emid X'=x'} \geq 0$. Using Markov's
+inequality we have $\Pr[X'\in Z]<1/10$. When $X'\in Z$ we cannot
+effectively bound the probability that $\EE(u,v)\neq Q(X', Y)$;
+namely, we bound this probability by 1. But if $X'\notin Z$,
+then by \autoref{lem:kl-err} and our choice of $\epsilon_0$, we
+have $\Pr[\EE(X', Y)\neq Q(X', Y)] < 1/10$. Furthermore, by
+\autoref{lem:error}(ii), $\Pr[\EE(u,v) \neq \EE(X', Y)]< 0.20$
+hence with probability at least $0.60$ we have $\EE(u,v) = Q(X',
+Y)$. This happens independently for all the values of
+$k\in[k_0]$, so by the Chernoff bound and our choice of $k_0$,
+we have $\Pr[Q'\hbox{ outputs }0]\le\Pr[b_R = 0] < \epsilon_0 /
+2$.
+
+Finally, $\Pr_{(u,v)\sim \nu_{n'}}[\Match(u,v) \ge R_0] \le
+\epsilon_0 /2$ by our choice of $R_0$. Note that the protocol
+$Q'$ uses a shared random bit string, say $W$, in the
+construction of the vectors $X'_{R,k}$ and $Y_{R,k}$. Hence,
+overall, we have
+\begin{align*}
+  \Pr_{W, (u,v)\sim\nu_{n'}}[\EE(u,v) = Q'(u,v)]
+      \ge 1 - \eps_0
+\end{align*}
+Since we measure the error of the protocol under a
+distribution, we can fix $W$ to a value without increasing the
+error under the aforementioned distribution by the so called
+easy direction of Yao's lemma. Namely, there exists a $w\in
+\supp(W)$ such that
+\begin{align*}
+  \Pr_{(u,v)\sim\nu_{n'}}[\EE(u,v)  = Q'(u,v)\emid W=w] 
+      \ge 1 - \eps_0
+\end{align*}
+Fix such $w$. Observe that $Q'$ is a $(r-1)$-round protocol for
+$\EE_{n'}$ where
+$n'=\frac{n}{400}2^\frac{-5(c+1)}{4n}=\Omega(n/2^\frac{5c}{4n})$
+and it sends at most $R_0k_0c = O(c)$ bits in each message.
+Furthermore, $Q'$ is deterministic and has at most $\eps_0$
+error on $\nu_{n'}$ as desired.
+\end{proof}
+
+\begin{theorem}
+\label{thm:main2}
+There exists a constant $\epsilon_0$ such that for any $r\leq\log^*n$,
+an $r$-round deterministic protocol for $\EE_n$ which has
+$\epsilon_0$ error on $\nu_n$ sends at least one message of size 
+$\Omega(n\log^{(r)}n)$.
+\end{theorem}
+\begin{proof}
+Suppose we have an $r$-round protocol with $c$-bit messages for
+$\EE_n$ that has $\epsilon_0$ error on $\nu_n$, where $c=\gamma
+n\log^{(r)}n$ for some $\gamma<4/5-o(1)$. By
+\autoref{lem:roundel}, this protocol can be converted to an
+$r-1$ round protocol with $\alpha c$-bit messages for $\EE_{n'}$
+that has $\epsilon_0$-error on $\nu_{n'}$, where $n'=\beta
+n/2^{5c/4n}$ for some $\alpha, \beta >0$. We only need to verify
+that $\alpha c \leq \gamma n'\log^{(r-1)}n'$. We have
+\begin{align*}
+\gamma n'\log^{(r-1)} n' &= \gamma\beta n/2^{5c/4n}\log^{(r-1)}
+(\beta n/2^{5c/4n})\\
+&= \gamma\beta n/2^{\frac{5\gamma}{4}\log^{(r)}n}\log^{(r-1)}
+(\beta n/2^{5c/4n})\\
+&\geq \gamma\beta n \left(\log^{(r-1)}n\right)^{1-\frac{5\gamma}{4}-o(1)}\\
+&\geq \gamma\alpha n\log^{(r)}n
+\end{align*}
+for $\gamma< 4/5 - o(1)$ and large enough $n$. Therefore, by
+iteratively applying \autoref{lem:roundel} we obtain a $0$-round
+protocol for $\EE_{\bar n}$ that makes $\epsilon_0$ error on
+$\nu_{\bar n}$ for some $\bar n$ satisfying $\gamma {\bar n}^2 =
+\gamma \bar n \log^{(0)} \bar n\geq c \alpha^r$. Therefore $\bar
+n \geq 1$ and since $\epsilon_0< 0.22$, the protocol we obtain
+contradicts \autoref{lem:terminal}, showing that the protocol we
+started with cannot exists.
+\end{proof}
+\begin{remark}
+We note that in the proof of \autoref{thm:main}, to show that a
+protocol with small communication does not exist, we start with
+the given protocol and apply the round elimination lemma (i.e.,
+\autoref{lem:roundel}) $r$ times to obtain a $0$-round protocol
+with small error probability, which is shown to be impossible by
+\autoref{lem:terminal}. Alternatively, one can apply the round
+elimination $r-1$ times to obtain a $1$-round protocol with
+$o(n\log n)$ communication for $\EE_{n}$, which is ruled out by
+\autoref{thm:singleround}.
+\end{remark}

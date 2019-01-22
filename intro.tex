@@ -1,0 +1,222 @@
+% !TeX root = ssd.tex
+\section{Introduction}
+In a two player communication problem the players, named Alice
+and Bob, receive separate inputs, $x$ and $y$, and they
+communicate in order to compute the value $f(x,y)$ of a function
+$f$ known to both of them. 
+In an $r$-round protocol, the players can take at most $r$
+turns alternately sending each other a message and the last
+player to receive a message declares the output of the protocol.
+A protocol can be {\em deterministic} or {\em randomized}; in
+the latter case the players can base their actions on a common
+random source and we measure the {\em error probability}: the
+maximum over inputs $(x,y)$, of the probability that the output
+of the protocol differs from $f(x,y)$.
+
+\subsection{Sparse set disjointness}
+Set disjointness is perhaps the most studied problem in
+communication complexity. In the most standard version Alice and
+Bob receive a subset of $[m]\defeq\{1,\ldots,m\}$ each, with the
+goal of deciding whether their sets intersect or not. The
+primary question is whether the players can improve on the
+trivial deterministic protocol, where the first player sends the
+entire input to the other player, thereby communicating $m$
+bits. The first lower bound on the randomized complexity of this
+problem was given in \cite{BabaiFS1986} by Babai et al., who
+showed that any $\epsilon$-error protocol for disjointness must
+communicate $\Omega(\sqrt{m})$ bits. The tight bound of
+$\Omega(m)$-bits was first given by Kalyanasundaram and
+Schnitger \cite{KalyanasundaramS1992} and was later simplified by
+Razborov \cite{Razborov1992} and Bar-Yossef et al.\
+\cite{Bar-YossefJKS2004}.
+
+In the sparse set disjointness problem $\DISJ_k^m$, the sets
+given to the players are guaranteed to have at most $k$
+elements. The deterministic communication complexity of this
+problem is well understood. The trivial protocol, where Alice
+sends her entire input to Bob solves the problem in one round
+using $O(k\log(m/k) + k)$ bits. On the other hand, an
+$\Omega(k\log(m/k) + k)$ bit total communication lower bound can be
+shown even for protocols with an arbitrary number of rounds, say
+using the rank method; see \cite{KushilevitzN1997}, page 175.
+
+The randomized complexity of the problem is far more subtle. The
+result of Kalyanasundaram and Schnitger cited above immediately 
+imply an $\Omega(k)$ lower bound for this version of the problem. 
+The folklore $1$-round protocol
+solves the problem using $O(k\log k)$ bits, wherein Alice sends
+$O(\log k)$-bit hashes for each element of her set. Håstad and
+Wigderson \cite{HastadW2007} gave a protocol that matches the
+$\Omega(k)$ lower bound mentioned above. Their $O(k)$-bit
+randomized protocol runs in $O(\log k)$-rounds and errs with a
+small constant probability. In \autoref{sec:upperbound}, we
+improve this protocol to run in $\log^*k$ rounds, still with
+$O(k)$ total communication, but with exponentially small error
+in $k$. We also present an $r$-round protocol for any
+$r<\log^*k$ with total communication $O(k\log^{(r)}k)$ and error
+probability well below $1/k$; see \autoref{thm:ub}. (Here
+$\log^{(r)}$ denotes the iterated logarithm function, see
+\autoref{sec:preliminaries}.) As the exists-equal problem with parameters
+$t$ and $n$ (see below) is a special case of $\DISJ_n^{tn}$, our
+lower bounds for the exists-equal problem (see below) show that
+complexity of this algorithm is optimal for any number
+$r\le\log^*k$ of rounds, even if we allow the much larger error
+probability of $1/3$. Buhrman et al.~\cite{BuhrmanGMW2012} and
+Woodruff \cite{Woodruff2008} (as presented in \cite{Patrascu2009})
+show an $\Omega(k\log k)$ lower bound for $1$-round complexity
+of $\DISJ^m_k$ by a reduction from the indexing problem (this 
+reduction was also mentioned in \cite{DasguptaKS12}). We
+note that these lower bounds do not apply to the exists-equal
+problem, as the input distribution they use generates instances
+inherently specific to the disjointness problem; furthermore
+this distribution admits a $O(\log k)$ protocol in two rounds.
+
+\subsection{The exists-equal problem}
+In the equality problem Alice and Bob receive elements $x$ and
+$y$ of a universe $[t]$ and they have to decide whether $x=y$.
+We define the two player communication game exists-equal with
+parameters $t$ and $n$ as follows. Each player is given an
+$n$-dimensional vector from $[t]^n$, namely $x$ and $y$. The
+value of the game is one if there exists a coordinate $i\in[n]$
+such that $x_i = y_i$, zero otherwise. Clearly, this problem is
+the OR of $n$ independent instances of the equality problem.
+
+The direct sum problem in communication complexity is the study
+of whether $n$ instances of a problem can be solved using less
+than $n$ times the communication required for a single instance
+of the problem. This question has been studied extensively for
+specific communication problems as well as some class of
+problems \cite{ChakrabartiSWY2001, JainRS2003, JainRS2005,
+Ben-AroyaRW2008, Gavinsky2008, JainKN2008, HarshaJMR2010, BarakBCR2010}.
+The so called direct sum approach is a very powerful tool to
+show lower bounds for communication games. In this approach, one
+expresses the problem at hand, say as the OR of $n$ instances of
+a simpler function and the lower bound is obtained by combining
+a lower bound for the simpler problem with a direct sum
+argument. For instance, the two-player and multi-player
+disjointness bounds of \cite{Bar-YossefJKS2004}, the lopsided set
+disjointness bounds \cite{Patrascu2011}, and the lower bounds for
+several communication problems that arise from streaming
+algorithms \cite{JayramW2009, MagniezMN2010} are a few examples of
+results that follow this approach.
+
+Exists-equal with parameters $t$ and $n$ is a special case of
+$\DISJ_n^{tn}$, so our protocols in \autoref{sec:upperbound}
+solve exists-equal. We show that when $t=\Omega(n)$ these
+protocols are optimal, namely every $r$-round randomized
+protocol ($r\le\log^*n$) with at most $1/3$ error error
+probability needs to send at least one message of size
+$\Omega(n\log^{(r)}n)$ bits. See \autoref{thm:main}. Our result
+shows that computing the OR of $n$ instances of the equality
+problem requires {\em strictly more} than $n$ times the
+communication required to solve a single instance of the
+equality problem when the number of rounds is smaller than
+$\log^* n-O(1)$. Recall that the equality problem admits an
+$\epsilon$-error $\log(1/\epsilon)$-bit one-round protocol in
+the common random source model.
+
+For $r=1$, our result implies that to compute the OR of $n$
+instances of the equality problem with {\em constant
+probability}, no protocol can do better than solving each
+instance of the equality problem with {\em high probability} so
+that the union bound can be applied when taking the OR of the
+computed results. The single round case of our lower bound also
+generalizes the $\Omega(n\log n)$ lower bound of Molinaro et
+al.\ \cite{MolinaroWY2013} for the one round communication
+problem, where the players have to find all the answers of $n$
+equality problems, outputting an $n$ bit string.
+
+\subsection{Lower bound techniques}
+
+We obtain our general lower bound via a round elimination
+argument. In such an argument one assumes the existence of a
+protocol $P$ that solves a communication problem, say $f$, in
+$r$ rounds. By suitably modifying the internals of $P$, one
+obtains another protocol $P'$ with $r-1$ rounds, which typically
+solves smaller instances of $f$ or has larger error than $P$.
+Iterating this process, one obtains a protocol with zero rounds.
+If the protocol we obtain solves non-trivial instances of $f$
+with good probability, we conclude that we have arrived at a
+contradiction, therefore the protocol we started with, $P$,
+cannot exist. Although round elimination arguments have been
+used for a long time, our round elimination lemma is the first
+to prove a {\em super-linear} communication lower bound in the
+number of primitive problems involved, obtaining which requires
+new and interesting ideas.
+
+The general round elimination presented in
+\autoref{sec:lowerbound} is very involved, but the lower bound
+on the one-round protocols can also be obtained in a more
+elementary way. As the one round case exhibits the most dramatic
+super-linear increase in the communication cost and also
+generalizes the lower bound in \cite{MolinaroWY2013}, we include
+this combinatorial argument separately in
+\autoref{sec:elementary}, see \autoref{thm:singleround}.
+
+At the heart of the general round elimination lemma is a new
+isoperimetric inequality on the discrete cube $[t]^n$ endowed
+with the Hamming distance. We present this result,
+\autoref{thm:isoperimetry}, in \autoref{sec:isoperimetry}. To
+the best of our knowledge, the first isoperimetric inequality on
+this metric space was proven by Lindsey in \cite{Lindsey1964},
+where the subsets of $[t]^n$ of a certain size with the so
+called minimum induced-edge number were characterized. This
+result was rediscovered in \cite{KleitmanKR1971} and
+\cite{Clements1971} as well. See \cite{AzizogluO2003} for a
+generalization of this inequality to universes which are
+$n$-dimensional boxes with arbitrary side lengths. In
+\cite{BollobasL1991}, Bollobás et al.\ study isoperimetric
+inequalities on $[t]^n$ endowed with the $\ell_1$ distance. For
+the purposes of our proof we need to find sets $S$ that minimize
+a substantially more complicated measure. This measure also
+captures how spread out $S$ is and can be described roughly as
+the average over points $x\in[t]^n$ of the logarithm of the
+number of points in the intersection of $S$ and a Hamming ball
+around $x$.
+
+\subsection{Related work} In \cite{MiltersenNSW1998}, a round
+elimination lemma was given, which applies to a class of
+problems with certain self-reducibility properties. The lemma is
+then is used to get lower bounds for various problems including
+the greater-than and the predecessor problems. This result was
+later tightened in \cite{Sen2003} to get better bounds for the
+aforementioned problems. Different round elimination arguments
+were also used in \cite{KarchmerW1990, HalstenbergR1988,
+NisanW1993,Miltersen1994, DurisGS1987,BeameF2001} for various
+communication complexity lower bounds and most recently in
+\cite{BrodyC2009} and \cite{BrodyCRVW2010} for obtaining lower
+bounds for the gapped Hamming distance problem.
+
+In parallel and independent of the present form of this paper
+Brody et al.\ \cite{BrodyCK2012} have also established an
+$\Omega(n\log^{(r)}n)$ lower bound for the $r$-round
+communication complexity of the exists-equal problem with
+parameter $n$. Their result applies for protocols with a
+polynomially small error probability like $1/n$. This stronger
+assumption on the protocol allows for simpler proof techniques,
+namely the information complexity based direct sum technique
+developed in several papers including
+\cite{Ablayev1996,ChakrabartiSWY2001}, but it is not enough to
+create an example where solving the OR of $n$ communication
+problems requires more than $n$ times the communication of
+solving a single instance. Indeed, even in the shared random
+source model one needs $\log n$ bits of communication
+(independent of the number of rounds) to achieve $1/n$ error in
+a single equality problem.
+
+\subsection{Structure of the paper}
+
+We start in \autoref{sec:upperbound} with our protocols for the
+sparse set disjointness. Note that the exists-equal problem is a
+special case of sparse set disjointness, so our protocols work
+also for the exists-equal problem. In the rest of the paper we
+establish matching lower bounds showing that the complexity of
+our protocols are within a constant factor to optimal for both
+the exists-equal and the sparse set disjointness problems, and
+for any number of rounds. In \autoref{sec:elementary} we give an
+elementary proof for the case of single round protocols. In
+\autoref{sec:isoperimetry} we develop our isoperimetric
+inequality and in \autoref{sec:lowerbound} we use it in our
+round elimination proof to get the lower bound for multiple
+round protocols. Finally in \autoref{sec:discussion} we point
+toward possible extensions of our results.

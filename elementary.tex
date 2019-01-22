@@ -1,0 +1,109 @@
+% !TeX root = ssd.tex
+\section{Lower bound for single round protocols}
+\label{sec:elementary}
+In this section we give an combinatorial proof that any single
+round randomized protocol for the exists-equal problem with
+parameters $n$ and $t=4n$ has complexity $\Omega(n\log n)$ if
+its error probability is at most $1/3$. As pointed out in the
+Introduction, to our knowledge this is the fist established case
+when solving the OR of $n$ instances of a communication problem
+requires strictly more than $n$ times the complexity needed to
+solve a single such instance.
+
+We start with with a simple and standard reduction from the
+randomized protocol to the deterministic one and further to a
+large set of inputs that makes the first (and in this case only)
+message fixed. These steps are also used in the general round
+elimination argument therefore we state them in general form.
+
+Let $\epsilon>0$ be a small constant and let $P$ be an
+$1/3$-error randomized protocol for the exists-equal problem
+with parameters $n$ and $t=4n$. We repeat the protocol $P$ in
+parallel taking the majority output, so that the number of
+rounds does not change, the length of the messages is multiplied
+by a constant and the error probability decreases below
+$\epsilon$. Now we fix the coins of of this $\epsilon$-error
+protocol in a way to make the resulting deterministic protocol
+err on at most $\epsilon$ fraction of the possible inputs.
+Denote the deterministic protocol we obtain by $Q$.
+
+\begin{lemma}
+\label{lem:determine-s}
+Let $Q$ be a deterministic protocol for the $\EE_n$ problem that
+makes at most $\epsilon$ error on the uniform distribution.
+Assume Alice sends the first message of length $c$. There exists
+an $S\subset [t]^n$ of size $\mu(S)=2^{-c-1}$ such that the
+first message of Alice is fixed when $x\in S$ and we have
+$\Pr_{y\sim \mu}[Q(x,y)\neq\EE(x,y)]\leq 2\epsilon$ for all
+$x\in S$.
+\end{lemma}
+
+\begin{proof}
+Note that the quantity $e(x)=\Pr_{y\sim
+\mu}[Q(x,y)\neq\EE(x,y)]$, averaged over all $x$, is the error
+probability of $Q$ on the uniform input, hence is at most
+$\epsilon$. Therefore for at least half of $x$, we have
+$e(x)\leq 2\epsilon$. The first message of Alice partitions this
+half into at most $2^c$ subsets. We pick $S$ to consist of
+$t^n/2^{c+1}$ vectors of the same part: at least one part must
+have this many elements.
+\end{proof}
+
+We fix a set $S$ as guaranteed by the lemma. We assume we
+started with a single round protocol, so $Q(x,y)=Q(x',y)$
+whenever $x,x'\in S$. Indeed, Alice sends the same message by
+the choice of $S$ and then the output is determined by Bob, who
+has the same input in the two cases.
+
+We call a pair $(x,y)$ {\em bad} if $x\in S$, $y\in[t]^n$ and
+$Q$ errs on this input, i.e., $Q(x,y)\ne\EE(x,y)$. Let $b$ be
+the number of bad pairs. By \autoref{lem:determine-s} each
+$x\in|S|$ is involved in at most $2\epsilon t^n$ bad pairs, so
+we have $$b\le2\epsilon|S|t^n.$$
+%
+We call a triple $(x,x',y)$ {\em bad} if $x,x'\in S$,
+$y\in[t]^n$, $\EE(x,y)=1$ and $\EE(x',y)=0$. The proof is based
+on double counting the number $z$ of bad triples.
+%
+Note that for a bad triple $(x,x',y)$ we have $Q(x,y)=Q(x',y)$
+but $\EE(x,y)\ne\EE(x',y)$, so $Q$ must err on either $(x,y)$ or
+$(x',y)$ making one of these pairs bad. Any pair (bad or not) is
+involved in at most $|S|$ bad triples, so we have
+\begin{align*}
+z\le b|S|\le2\epsilon|S|^2t^n.
+\end{align*}
+
+Let us fix arbitrary $x,x'\in S$ with $\Match(x,x')\le n/2$. We
+estimate the number of $y\in[t]^n$ that makes $(x,x',y)$ a bad
+triple. Such a $y$ must have $\Match(x,y)>\Match(x',y)=0$. To
+simplify the calculation we only count the vectors $y$ with
+$\Match(x,y)=1$. The match between $y$ and $x$ can occur at any
+position $i$ with $x_i\ne x'_i$. After fixing the coordinate
+$y_i=x_i$ we can pick the remaining coordinates $y_j$ of $y$
+freely as long as we avoid $x_j$ and $x'_j$. Thus we have
+\begin{align*}
+|\{y\emid(x,x'y)\hbox{ is bad}\}|\ge
+(n-\Match(x,y))(t-2)^{n-1}\ge(n/2)(t-2)^{n-1}>t^n/14,
+\end{align*}
+where in the last inequality we used $t=4n$. Let $s$ be the size
+of the Hamming ball
+$B_{n/2}(x)=\{y\in[t]^n\emid\Match(x,y)>n/2\}$. By the Chernoff
+bound we have $s<t^n/n^{n/2}$ (using $t=4n$ again). For a fixed
+$x$ we have at least $|S|-s$ choices for $x'\in S$ with
+$\Match(x,x')\le n/2$ when the above bound for triples apply.
+Thus we have $$z\ge|S|(|S|-s)t^n/14.$$ Combining this with the
+lower bound on the number of bad triples we get
+$$28\epsilon|S|\ge|S|-s.$$
+
+Therefore we conclude that we either have large error
+$\epsilon>1/56$ or else we have $|S|\le2s<2t^n/n^{n/2}$. As we
+have $|S|=t^n/2^{c+1}$ the latter possibility implies 
+$$c\ge n\log n/2-2.$$ Summarizing we have the following.
+
+\begin{theorem} \label{thm:singleround} A single round
+randomized protocol for $\EE_n$ with error probability $1/3$
+has complexity $\Omega(n\log n)$.
+A single round deterministic protocol for $\EE_n$ that errs on
+at most $1/56$ fraction of the inputs has complexity at least
+$n\log n/2-2$.
+\end{theorem}

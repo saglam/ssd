@@ -1,0 +1,145 @@
+% !TeX root = ssd.tex
+\section{The upper bound}
+\label{sec:upperbound}
+Recall that in the communication problem $\DISJ_k^m$, each of
+the two players is given a subset of $[m]$ of size at most $k$
+and they communicate in order to determine whether their sets
+are disjoint or not. In 1997, H\aa stad and Wigderson
+\cite{ParnafesIRWA1997,HastadW2007} gave a probabilistic protocol
+that solves this problem with $O(k)$ bits of communication and
+has constant one-sided error probability. The protocol takes
+$O(\log k)$ rounds. Let us briefly review this protocol as this
+is the starting point of our protocol.
+
+Let $S,T\subseteq[m]$ be the inputs of Alice and Bob. Observe
+that if they find a set $Z$ satisfying $S\subseteq Z\subseteq
+[m]$, then Bob can replace his input $T$ with $T'=T\cap Z$ as
+$T'\cap S=T\cap S$. The main observation is that if $S$ and $T$
+are disjoint, then a random set $Z\supseteq S$ will intersect
+$T$ in a uniform random subset, so one can expect
+$|T'|\approx|T|/2$. In the H\aa stad-Wigderson protocol the
+players alternate in finding a random set that contains the
+current input of one of them, effectively halving the other
+player's input. If in this process the input of one of the
+players becomes empty, they know the original inputs were
+disjoint. If, however, the sizes of their inputs do not show the
+expected exponential decrease in time, then they declare that
+their inputs intersect. This introduces a small one sided error.
+Note that one of the two outcomes happens in $O(\log k)$ rounds.
+An important observation is that Alice can describe a random set
+$Z\supseteq S$ to Bob using an expected $O(|S|)$ bits by making
+use of the joint random source. This makes the total
+communication $O(k)$.
+
+In our protocol proving the next theorem, we do almost the same,
+but we choose the random sets $Z\supseteq S$ not uniformly, but
+from a biased distribution favoring ever smaller sets. This
+makes the size of the input sets of the players decrease much
+more rapidly, but describing the random set $Z$ to the other
+player becomes more costly. By carefully balancing the
+parameters we optimize for the total communication given any
+number of rounds. When the number of rounds reaches
+$\log^*k-O(1)$ the communication reaches its minimum of $O(k)$
+and the error becomes exponentially small.
+
+\begin{theorem}\label{thm:ub}
+For any $r\leq \log^*k$, there is an $r$-round probabilistic
+protocol for $\DISJ^m_k$ with $O(k\log^{(r)}k)$ bits total
+communication. There is no error for intersecting input sets,
+and the probability of error for disjoint sets can be made
+$O(1/\exp^{(r)}(c\log^{(r)} k)+ \exp(-\sqrt k))\ll 1/k$ for any
+constant $c > 1$.
+
+For $r=\log^*k-O(1)$ rounds this means an $O(k)$-bit protocol
+with error probability $O(\exp(-\sqrt k))$.
+\end{theorem}
+
+\begin{proof}
+We start with the description of the protocol. Let $S_0$ and
+$S_1$ be the input sets of Alice and Bob, respectively. For
+$1\le i\le r$, $i$ even Alice sends a message describing a set
+$Z_i\supset S_i$ based on her ``current input'' $S_i$ and Bob
+updates his ``current input'' $S_{i-1}$ to $S_{i+1}\defeq
+S_{i-1}\cap Z_i$. In odd numbered rounds the same happens with
+the role of Alice and Bob reversed. We depart from the H\aa
+stad-Wigderson protocol in the way we choose the sets $Z_i$:
+Using the shared random source the players generate $l_i$ random
+subsets of $[m]$ containing each element of $[m]$ independently
+and with probability $p_i$. We will set these parameters later.
+The set $Z_i$ is chosen to be the first such set containing
+$S_i$. Alice or Bob (depending on the parity of $i$) sends the
+index of this set or ends the protocol by sending a special
+error signal if none of the generated sets contain $S_i$. The
+protocol ends with declaring the inputs disjoint if the error
+signal is never sent and we have $S_{r+1}=\emptyset$. In all
+other cases the protocol ends with declaring ``not disjoint''.
+
+This finishes the description of the protocol except for the
+setting of the parameters. Note that the error of the protocol
+is one-sided: $S_0\cap S_1=S_i\cap S_{i+1}$ for $i\le r$, so
+intersecting inputs cannot yield $S_{r+1}=\emptyset$.
+
+We set the parameters (including $k_i$ used in the analysis) 
+as follows:
+\begin{align*}
+u&=(c+1)\log^{(r)}k,\\
+p_i&=\frac1{\exp^{(i)}u}&\hbox{for }1\le i\le r,\\
+l_1&=k\exp(ku),\\
+l_i&=k2^{k/2^{i-4}}&\hbox{for }2\le i\le r,\\
+k_0&=k_1=k,\\
+k_i&=\frac k{2^{i-4}\exp^{(i-1)}u}&\hbox{for }2\le i\le r,\\
+k_{r+1}&=0.
+\end{align*}
+
+The message sent in round $i>1$ has length
+$\lceil\log(l_i+1)\rceil<k/2^{i-4}+\log k+1$, thus the total
+communication in all rounds but the first is $O(k)$. The length
+of the first message is $\lceil\log(l_1+1)\rceil\le ku+\log
+k+1$. The total communication is $O(ku)=O(ck\log^{(r)}k)$ as
+claimed (recall that $c$ is a constant).
+
+Let us assume the input pair is disjoint. To estimate the error
+probability we call round $i$ {\em bad} if an error message is
+sent or a set $S_{i+1}$ is created with $|S_{i+1}|>k_{i+1}$. If
+no bad round exists we have $S_{r+1}=\emptyset$ and the protocol
+makes no error. In what follows we bound the probability that
+round $i$ is bad assuming the previous rounds are not bad and
+therefore having $|S_j|\le k_j$ for $0\le j\le i$.
+
+The probability that a random set constructed in round $i$
+contains $S_i$ is $p_i^{-|S_i|}\ge p_i^{-k_i}$. The probability
+that none of the $l_i$ sets contains $S_i$ and thus an error
+message is sent is therefore at most
+$(1-p_i^{k_i})^{l_i}<e^{-k}$.
+
+If no error occurs in the first bad round $i$, then
+$|S_{i+1}|>k_{i+1}$. Note that in this case $S_{i+1}=S_{i-1}\cap
+Z_i$ contains each element of $S_{i-1}$ independently and with
+probability $p_i$. This is because the choice of $Z_i$ was based
+on it containing $S_i$, so it was independent of its
+intersection with $S_{i-1}$ (recall that $S_i\cap
+S_{i-1}=S_1\cap S_0=\emptyset$). For $i<r$ we use the Chernoff
+bound. The expected size of $S_{i+1}$ is $|S_{i-1}|p_i\le
+k_{i-1}p_i\le k_{i+1}/2$, thus the probability of
+$|S_{i+1}|>k_{i+1}$ is at most $2^{-k_{i+1}/4}$. Finally for the
+last round $i=r$ we use the simpler estimate $p_rk_{r-1}\le
+k/\exp^{(r)}u$ for $|S_{r+1}|>k_{r+1}=0$.
+
+Summing over all these estimates we obtain the following error
+bound for our protocol:
+$$\Pr[\hbox{error}]\le re^{-k}+\frac k{\exp^{(r)}u}+
+\sum_{i=2}^r2^{-k_i/4}.$$
+In case $k_r\ge4\sqrt k$ this error estimate proves the theorem.
+In case $k_r<4\sqrt k$ we need to make a minor adjustments in
+the setting of our parameters. We take $j$ to be the smallest
+value with $k_j<4\sqrt k$, modify the parameters for round $j$
+and stop the protocol after this round declaring ``disjoint'' if
+$S_{j+1}=\emptyset$ and ``intersecting'' otherwise. The new
+parameters for round $j$ are $k'_j=4\sqrt k$, $p'_j=2^{-2\sqrt
+k}$, $l'_j=k2^{8k}$. This new setting of the parameters makes
+the message in the last round linear in $k$, while both the
+probability that round $j-1$ is bad because it makes
+$|S_j|>k'_j$, or the probability that round $j$ is bad for any
+reason (error message or $S_{j+1}\ne\emptyset$) is $O(2^{-\sqrt
+k})$. This finishes the analysis of our protocol.
+\end{proof}
