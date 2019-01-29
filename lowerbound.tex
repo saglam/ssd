@@ -9,7 +9,9 @@
 
 %\subsection{Inspecting the protocol for the large instance}
 %\label{sec:inspect}
-In this section we prove our main lower bound result:
+In this section we prove our main lower bound result for the 
+exists-equal problem, which implies a corresponding lower bound
+for the $k$-disjointness problem.
 \begin{theorem}
 \label{thm:main}
 For any $r\leq\log^*n$, an $r$-round probabilistic protocol for
@@ -23,7 +25,7 @@ extreme, which immediately follows from \autoref{thm:main}, is
 the following.
 
 \begin{corollary}
-Any probabilistic protocol for $\EE_n$ with maximum message size
+Any randomized protocol for $\EE_n$ with maximum message size
 $O(n)$ and error $1/3$ has at least $\log^* n - O(1)$ rounds.
 \end{corollary}
 
@@ -39,12 +41,12 @@ most $\epsilon$ fraction of the possible inputs. Applying
 \autoref{thm:main2} to the protocol $Q$ proves
 \autoref{thm:main}.
 
-In the rest of this section we use round-elimination to prove
-\autoref{thm:main2}, that is, we will use $Q$ to solve smaller
-instances of the exists-equal problem in a way that the first
-message is always the same, and hence can be eliminated.
+In the rest of this section we use a round-elimination argument
+to prove \autoref{thm:main2}, that is, we will use $Q$ to solve
+smaller instances of the exists-equal problem in a way that the
+first message is always the same, and hence can be eliminated.
 
-Suppose Alice sends the first message of $c$ bits in $Q$. By
+Suppose Alice sends the first message of $c$ bits in protocol $Q$. By
 \autoref{lem:determine-s}, there exists a $S\subset [t]^n$ of
 size $\mu(S)=2^{-c-1}$ such that the first message of Alice is
 fixed when $x\in S$ and we have $\Pr_{y\sim
@@ -65,9 +67,14 @@ as $x'_e$.
 
 \subsection{Embedding the smaller problem}
 \label{sec:embed}
+Let $n'\defeq M/10$ and $t'\defeq4n'$. Suppose Alice and Bob
+are given an instance $(u,v)$ of the $\EE_{n'}$ problem,
+where $u,v\in[t']^{n'}$. To compute $\EE(u,v)$, 
+through a random process Alice and Bob will map $(u,v)$ to
+random vectors $(X', Y)$ so that $\supp(X'),\supp(Y)\in[t]^n$
 The players embed a smaller instance $u,v\in[t']^{n'}$ of the
 exists-equal problem in $\EE_n$ concentrating on the coordinates
-$I$ determined above. We set $n'\defeq M/10$ and $t'\defeq4n'$.
+$I$ determined above. We set .
 Optimally, the same embedding should guarantee low error
 probability for all pairs of inputs, but for technical reasons
 we need to know the number of coordinate agreements
@@ -80,7 +87,7 @@ constant. For results on constant round protocols one can
 concentrate on the $R=1$ case.
 
 In order to solve the exist-equal problem with parameters $t'$
-and $n'$ Alice and Bob use the joint random source to turn their
+and $n'$ Alice and Bob use the shared random source to turn their
 input $u,v\in[t']^{n'}$ into longer random vectors
 $X',Y\in[t]^n$, respectively, and apply the protocol $Q$ above
 to solve this exists-equal problem for these larger inputs. Here
@@ -114,10 +121,10 @@ The random variables $X'$ and $Y$ are constructed as follows.
 Let $m\defeq 2n/(MR)$ be an integer. Each player repeats his or
 her input ($u$ and $v$, respectively) $m$ times, obtaining a
 vector of size $n/(5R)$. Then using the shared randomness, the
-players pick $n/(5R)$ uniform random maps $m_i:[t']\to[t]$
+players pick $n/(5R)$ uniform random maps $m_i\colon[t']\to[t]$
 independently and apply $m_i$ to $i$\/th coordinate.
 Furthermore, the players pick a uniform random 1-1 mapping
-$\pi:[n/(5R)]\to I$ and use it to embed the coordinates of the
+$\pi\colon[n/(5R)]\to I$ and use it to embed the coordinates of the
 vectors they constructed among the coordinates of the vectors
 $X$ and $Y$ of length $n$. The remaining $n-n/(5R)$ coordinates
 of $X$ is picked uniformly at random by Alice and similarly, the
@@ -177,11 +184,11 @@ K=\emptyset\emid N_X\ne\emptyset] +\Pr[N_X=\emptyset]\le
 e^{-10}+5^{-M}$. This completes the proof.
 \end{proof}
 
-We quantify the correlation of $X'$ and $Y$ stated in \propref{prop:4} 
-by their mutual information. This mutual information argument is
-postponed to the next subsection; here we show how such a bound
-to the mutual information implies that the error introduced by $Q$ is
-small.
+We quantify the correlation of $X'$ and $Y$ stated in
+\propref{prop:4} by their mutual information. This mutual
+information argument is postponed to the next subsection; here
+we show how such a bound to the mutual information implies that
+the error introduced by $Q$ is small.
 
 \begin{lemma}
 \label{lem:kl-err}
@@ -219,7 +226,7 @@ for all $x$ that is provided by \autoref{lem:determine-s}
 and the assumption of the present lemma that $\gamma\ge 2\eps$.
 \end{proof}
 
-\subsection{Establishing \propref{prop:4}}
+\subsection{Establishing the low correlation property}
 
 We quantify \propref{prop:4} using the mutual information. 
 If $\Match(u,v)=R$ our process generates $X$
@@ -232,9 +239,12 @@ vectors $Y$ but it only decreases the entropy by $O(1)$. The
 calculations in this subsection make this intuitive argument
 precise.
 
-
+Recall that $X$ and $Y$ are correlated due to the random process
+with which Alice and Bob generate them and $X'$ is obtained from
+$X$. To understand $\muti{X'}{Y}$
 \begin{lemma}
-\label{lem:x-uniform} For any $u,v\in[t']^{n'}$ we have
+\label{lem:x-uniform}
+For any $u,v\in[t']^{n'}$ it holds that
 $\muti{X}{X'}\le M\log k  + n\log k / 5^M$.
 \end{lemma}
 \begin{proof}

@@ -31,7 +31,19 @@
 \include{definitions/linearalgebra}
 \include{definitions/probability}
 \include{definitions/entropy}
-\include{definitions/citations}
+
+\usepackage[
+  backend=biber,
+  style=numeric,
+  natbib=true,
+  backref,
+  url=true,
+  maxbibnames=99]{biblatex}
+\DefineBibliographyStrings{english}{%
+  backrefpage = {cited on page},
+  backrefpages = {cited on pages},
+}
+
 \addbibresource{references/main.bib}
 
 % Local definitions

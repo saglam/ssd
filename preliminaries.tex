@@ -1,9 +1,7 @@
 % !TeX root = ssd.tex
 \section{Preliminaries}
 \label{sec:preliminaries}
-For a positive integer
-$t$, we write $[t]$ for the set of positive integers not
-exceeding $t$.
+For a positive integer $t$, we write $[t]$ for the set $\set{1,2,\ldots,t}$.
 
 For two $n$-dimensional vectors $x$, $y$, let
 $\Match(x,y)$ be the number of coordinates where $x$ and $y$
@@ -33,9 +31,8 @@ the iterated versions of these functions:
 Moreover we define $\log^* x$ to be the smallest integer $r$ for which
 $\log^{(r)} x<2$. 
 
-\subsection{Communication protocols}
 
-\subsection{Random variables and distributions}
+\subsection{Distributions and random variables}
 We denote the distribution of a random
 variable $X$ by $\dist(X)$ and the support set of it by
 $\supp(X)$. We write $\Pr_{x\sim\nu}[\cdot]$ and
@@ -81,3 +78,9 @@ Let $\supp(X)\subseteq[t]^n$. We have
 $\frac{l}{n}\ent{X} \leq \E_L[\ent{X_L}]$, where the expectation is taken for
 a uniform random $l$-subset $L$ of $[n]$.
 \end{lemma}
+
+\subsection{Communication protocols}
+\label{sec:comm-protocols}
+
+\paragraph{Sparse set disjointness.}
+The players Alice and Bob

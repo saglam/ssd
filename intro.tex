@@ -5,7 +5,8 @@ and Bob, receive separate inputs, $x$ and $y$, and they
 communicate in order to compute the value $f(x,y)$ of a function
 $f$ known to both of them. 
 In an $r$-round protocol, the players can take at most $r$
-turns alternately sending each other a message and the last
+turns alternately sending each other a message 
+(that is, a bit string) and the last
 player to receive a message declares the output of the protocol.
 A protocol can be {\em deterministic} or {\em randomized}; in
 the latter case the players can base their actions on a common
@@ -22,13 +23,13 @@ primary question is whether the players can improve on the
 trivial deterministic protocol, where the first player sends the
 entire input to the other player, thereby communicating $m$
 bits. The first lower bound on the randomized complexity of this
-problem was given in \cite{BabaiFS1986} by Babai et al., who
-showed that any $\epsilon$-error protocol for disjointness must
+problem was given in \cite{BabaiFS1986} by Babai, Frankl and Simon, 
+who showed that any $\eps$-error protocol for disjointness must
 communicate $\Omega(\sqrt{m})$ bits. The tight bound of
 $\Omega(m)$-bits was first given by Kalyanasundaram and
 Schnitger \cite{KalyanasundaramS1992} and was later simplified by
-Razborov \cite{Razborov1992} and Bar-Yossef et al.\
-\cite{Bar-YossefJKS2004}.
+Razborov \cite{Razborov1992} and 
+Bar-Yossef, Jayram, Kumar and Sivakumar \cite{Bar-YossefJKS2004}.
 
 In the sparse set disjointness problem $\DISJ_k^m$, the sets
 given to the players are guaranteed to have at most $k$

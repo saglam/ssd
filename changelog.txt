@@ -1,0 +1,18 @@
+Changes in v1.1:
+--------------
+- The information theoretic part of the proof is now
+  expressed in mutual information as opposed to Shannon
+  entropy, which makes the presentation much cleaner.
+
+- Lemma 6.4 (Previously called Lemma 7 in v1): 
+  We significanly simplify the analysis of error
+  introduced by the original protocol by realizing that
+  convexity actually works in our favor. Without 
+  this realization, the earlier version discards
+  "bad" Alice inputs x where D(Y | X'=x || Y) is more than
+  twice the expected value, and then argues their mass
+  cannot be too large by Markov's inequality.
+  Instead, we argue in Lemma 6.4 that if D(Y | X' || Y) is 
+  small, one can bound the total error introduced by the 
+  protocol by convexity and no case analysis is needed.
+

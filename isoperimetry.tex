@@ -19,7 +19,7 @@ same holds for the edge boundary of a subcube. These results can
 be generalized to other cardinalities \cite{Hart1976}; see the
 survey by Bezrukov \cite{Bezrukov1994}.
 
-Consider the metric space over the set $[t]^n$ endowed 
+Consider the metric space over the set $[t]^n$ equipped 
 with the Hamming distance.
 Let $f$ be a concave function on the nonnegative integers 
 and $1\le M<n$ be an integer. 
@@ -27,13 +27,13 @@ We consider the following
 value as a generalized perimeter of a set $S\subseteq[t]^n$:
 \begin{align*}
 %\label{eq:nbr}
-\E_{x\sim\mu}[f\left(\left|B_M(x)\cap S\right|\right)],
+\E_{x\sim\mu}\sparen{f\nparen{\abs{B_M(x)\cap S}}},
 \end{align*}
 where $B_M(x)=\{y\in[t]^n\mid\Match(x,y)\ge M\}$ is the radius
 $n-M$ Hamming ball around $x$. Note that when $M=n-1$ and $f$ is
 the counting function given as $f(0)=0$ and $f(l)=1$ for $l>0$
-(which is concave), the above quantity is exactly the normalized
-size of the vertex boundary of $S$. For other concave functions
+(which is concave), the above quantity is the size of the vertex 
+boundary of $S$ up to some normalization. For other concave functions
 $f$ and parameters $M$ this quantity can still be considered a
 measure of how ``spread out'' the set $S$ is. We conjecture that
 $n$-dimensional boxes minimize this measure in every case.
@@ -56,6 +56,8 @@ Having this weaker result allows us to prove our communication
 complexity lower bound in the next section but proving the
 conjecture here would simplify this proof.
 
+\subsection{A compression argument}
+\label{sec:isoperimetry:comp}
 We start the technical part of this section by introducing the
 notation we will use. For $x,y\in[t]^n$ and $i\in[n]$ we write
 $x\sim_iy$ if $x_j=y_j$ for $j\in[n]\setminus\{i\}$. Observe
@@ -197,6 +199,8 @@ inequality and the equality comes from the observations of the
 previous paragraph.
 \end{proof}
 
+\subsection{Projecting to a subset of the coordinates}
+\label{sec:isoperimetry:proj}
 \begin{lemma}
 \label{lem:find-prod}
 Let $K\subseteq [t]^n$ be arbitrary. 
