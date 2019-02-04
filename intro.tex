@@ -1,35 +1,22 @@
 % !TeX root = ssd.tex
 \section{Introduction}
-In a two player communication problem the players, named Alice
-and Bob, receive separate inputs, $x$ and $y$, and they
-communicate in order to compute the value $f(x,y)$ of a function
-$f$ known to both of them. 
-In an $r$-round protocol, the players can take at most $r$
-turns alternately sending each other a message 
-(that is, a bit string) and the last
-player to receive a message declares the output of the protocol.
-A protocol can be {\em deterministic} or {\em randomized}; in
-the latter case the players can base their actions on a common
-random source and we measure the {\em error probability}: the
-maximum over inputs $(x,y)$, of the probability that the output
-of the protocol differs from $f(x,y)$.
-
-\subsection{Sparse set disjointness}
 Set disjointness is perhaps the most studied problem in
-communication complexity. In the most standard version Alice and
-Bob receive a subset of $[m]\defeq\{1,\ldots,m\}$ each, with the
-goal of deciding whether their sets intersect or not. The
-primary question is whether the players can improve on the
-trivial deterministic protocol, where the first player sends the
+communication complexity. In the most common version two
+players, called Alice and Bob, receive a subset of
+$[m]\defeq\{1,\ldots,m\}$ each, with the goal of deciding
+whether their sets intersect or not. The primary question is
+whether the players can significantly improve on the trivial
+deterministic protocol, wherein the first player sends the
 entire input to the other player, thereby communicating $m$
 bits. The first lower bound on the randomized complexity of this
-problem was given in \cite{BabaiFS1986} by Babai, Frankl and Simon, 
-who showed that any $\eps$-error protocol for disjointness must
-communicate $\Omega(\sqrt{m})$ bits. The tight bound of
-$\Omega(m)$-bits was first given by Kalyanasundaram and
-Schnitger \cite{KalyanasundaramS1992} and was later simplified by
-Razborov \cite{Razborov1992} and 
-Bar-Yossef, Jayram, Kumar and Sivakumar \cite{Bar-YossefJKS2004}.
+problem was given in \cite{BabaiFS1986} by Babai, Frankl and
+Simon, who showed that any $\eps$-error protocol for
+disjointness must communicate at least $\Omega(\sqrt{m})$ bits.
+The tight bound of $\Omega(m)$-bits was first given by
+Kalyanasundaram and Schnitger \cite{KalyanasundaramS1992} and
+was later simplified by Razborov \cite{Razborov1992} and
+Bar-Yossef, Jayram, Kumar and Sivakumar
+\cite{Bar-YossefJKS2004}.
 
 In the sparse set disjointness problem $\DISJ_k^m$, the sets
 given to the players are guaranteed to have at most $k$
@@ -132,7 +119,7 @@ equality problems, outputting an $n$ bit string.
 We obtain our general lower bound via a round elimination
 argument. In such an argument one assumes the existence of a
 protocol $P$ that solves a communication problem, say $f$, in
-$r$ rounds. By suitably modifying the internals of $P$, one
+$r$ rounds. By suitably modifying the inner working of $P$, one
 obtains another protocol $P'$ with $r-1$ rounds, which typically
 solves smaller instances of $f$ or has larger error than $P$.
 Iterating this process, one obtains a protocol with zero rounds.
@@ -145,17 +132,8 @@ to prove a {\em super-linear} communication lower bound in the
 number of primitive problems involved, obtaining which requires
 new and interesting ideas.
 
-The general round elimination presented in
-\autoref{sec:lowerbound} is very involved, but the lower bound
-on the one-round protocols can also be obtained in a more
-elementary way. As the one round case exhibits the most dramatic
-super-linear increase in the communication cost and also
-generalizes the lower bound in \cite{MolinaroWY2013}, we include
-this combinatorial argument separately in
-\autoref{sec:elementary}, see \autoref{thm:singleround}.
-
 At the heart of the general round elimination lemma is a new
-isoperimetric inequality on the discrete cube $[t]^n$ endowed
+isoperimetric inequality on the discrete cube $[t]^n$ equipped
 with the Hamming distance. We present this result,
 \autoref{thm:isoperimetry}, in \autoref{sec:isoperimetry}. To
 the best of our knowledge, the first isoperimetric inequality on
@@ -175,7 +153,12 @@ the average over points $x\in[t]^n$ of the logarithm of the
 number of points in the intersection of $S$ and a Hamming ball
 around $x$.
 
-\subsection{Related work} In \cite{MiltersenNSW1998}, a round
+\subsection{Earlier work}
+\label{sec:intro:earlier}
+
+\subsection{Related work}
+\label{sec:intro:related}
+In \cite{MiltersenNSW1998}, a round
 elimination lemma was given, which applies to a class of
 problems with certain self-reducibility properties. The lemma is
 then is used to get lower bounds for various problems including
@@ -206,6 +189,16 @@ source model one needs $\log n$ bits of communication
 a single equality problem.
 
 \subsection{Structure of the paper}
+\label{sec:intro:map}
+
+The general round elimination presented in
+\autoref{sec:lowerbound} is very involved, but the lower bound
+on the one-round protocols can also be obtained in a more
+elementary way. As the one round case exhibits the most dramatic
+super-linear increase in the communication cost and also
+generalizes the lower bound in \cite{MolinaroWY2013}, we include
+this combinatorial argument separately in
+\autoref{sec:elementary}.
 
 We start in \autoref{sec:upperbound} with our protocols for the
 sparse set disjointness. Note that the exists-equal problem is a

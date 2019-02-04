@@ -32,7 +32,8 @@ Moreover we define $\log^* x$ to be the smallest integer $r$ for which
 $\log^{(r)} x<2$. 
 
 
-\subsection{Distributions and random variables}
+\subsection{Probabilistic definitions and facts}
+\label{sec:prelim:prob}
 We denote the distribution of a random
 variable $X$ by $\dist(X)$ and the support set of it by
 $\supp(X)$. We write $\Pr_{x\sim\nu}[\cdot]$ and
@@ -52,6 +53,7 @@ Chernoff bound.
 \end{theorem}
 
 \subsection{Facts from information theory}
+\label{sec:prelim:infotheory}
 Here we briefly review some definitions and facts from
 information theory that we use in this paper. For a random
 variable $X$, we denote its binary Shannon entropy by $\ent{X}$.
@@ -80,7 +82,21 @@ a uniform random $l$-subset $L$ of $[n]$.
 \end{lemma}
 
 \subsection{Communication protocols}
-\label{sec:comm-protocols}
+\label{sec:prelim:comm}
+In a two player communication problem the players, named Alice
+and Bob, receive separate inputs, $x$ and $y$, and they
+communicate in order to compute the value $f(x,y)$ of a function
+$f$ known to both of them.
+In an $r$-round protocol, the players can take at most $r$
+turns alternately sending each other a message 
+(that is, a bit string) and the last
+player to receive a message declares the output of the protocol.
+A protocol can be {\em deterministic} or {\em randomized}; in
+the latter case the players can base their actions on a common
+random source and we measure the {\em error probability}: the
+maximum over inputs $(x,y)$, of the probability that the output
+of the protocol differs from $f(x,y)$.
 
 \paragraph{Sparse set disjointness.}
-The players Alice and Bob
+The two players Alice and Bob each get a subset of $[m]$
+of size $k$, say $S$ and $T$.
